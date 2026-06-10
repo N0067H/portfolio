@@ -2,7 +2,6 @@ classDiagram
     direction LR
 
     class MonitoredApi {
-        <<API 등록 정보>>
         + apiId : String PK
         + url : String
         + interval_sec : int
@@ -12,7 +11,6 @@ classDiagram
         + lastAlertAt : String
     }
     class CheckHistory {
-        <<체크 이력>>
         + apiId : String FK
         + checkedAt : String PK
         + statusCode : int
