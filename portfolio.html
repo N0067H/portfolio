@@ -948,6 +948,7 @@
   /* ── Helpers ── */
   const e = (s) => String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const r = (s) => e(s).replace(/&lt;strong&gt;/g,'<strong>').replace(/&lt;\/strong&gt;/g,'</strong>');
 
   const badge = (t) => `<span class="badge">${e(t)}</span>`;
   const hr = () => '<div class="mp-divider"></div>';
@@ -1002,10 +1003,10 @@
           <span>${e(t.problem)}</span>
         </div>
         <div class="ts-body">
-          <div class="ts-cell"><div class="ts-lbl">원인</div><div class="ts-val">${e(t.cause)}</div></div>
-          <div class="ts-cell"><div class="ts-lbl">해결</div><div class="ts-val">${e(t.solution)}</div></div>
+          <div class="ts-cell"><div class="ts-lbl">원인</div><div class="ts-val">${r(t.cause)}</div></div>
+          <div class="ts-cell"><div class="ts-lbl">해결</div><div class="ts-val">${r(t.solution)}</div></div>
         </div>
-        <div class="ts-cell-full"><div class="ts-lbl">결과</div><div class="ts-val">${e(t.result)}</div></div>
+        <div class="ts-cell-full"><div class="ts-lbl">결과</div><div class="ts-val">${r(t.result)}</div></div>
       </div>
     `).join('');
   }
@@ -1020,7 +1021,7 @@
         <span class="mp-metric-label">${e(m.label)}</span>
       </div>`).join('');
     const stackBadges = p.stack.map(([,v])=>`<span class="mp-stack-badge">${e(v)}</span>`).join('');
-    const li = (cls, items) => items.map(x=>`<li>${e(x)}</li>`).join('');
+    const li = (cls, items) => items.map(x=>`<li>${r(x)}</li>`).join('');
 
     return `
       <div class="main-project">
