@@ -1,19 +1,26 @@
 classDiagram
     direction LR
-    class MonitoredApi {
-        +String apiId
-        +String url
-        +int interval_sec
-        +int timeout_ms
-        +int threshold
-        +int consecutiveFailures
-        +String lastAlertAt
+
+    class MonitoredApi:::primary {
+        <<API 등록 정보>>
+        +apiId : String PK
+        +url : String
+        +interval_sec : int
+        +timeout_ms : int
+        +threshold : int
+        +consecutiveFailures : int
+        +lastAlertAt : String
     }
-    class CheckHistory {
-        +String apiId
-        +String checkedAt
-        +int statusCode
-        +int responseTimeMs
-        +int isSuccess
+    class CheckHistory:::secondary {
+        <<체크 이력>>
+        +apiId : String FK
+        +checkedAt : String PK
+        +statusCode : int
+        +responseTimeMs : int
+        +isSuccess : boolean
     }
-    MonitoredApi "1" --> "0..*" CheckHistory : apiId
+
+    MonitoredApi "1" --> "0..*" CheckHistory
+
+    classDef primary fill:#EEF0FF,stroke:#2D3580,stroke-width:2px,color:#1A1A1A
+    classDef secondary fill:#FFF0EA,stroke:#C8520A,stroke-width:2px,color:#1A1A1A
