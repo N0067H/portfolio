@@ -1,26 +1,23 @@
 classDiagram
     direction LR
 
-    class MonitoredApi:::primary {
+    class MonitoredApi {
         <<API 등록 정보>>
-        +apiId : String PK
-        +url : String
-        +interval_sec : int
-        +timeout_ms : int
-        +threshold : int
-        +consecutiveFailures : int
-        +lastAlertAt : String
+        + apiId : String PK
+        + url : String
+        + interval_sec : int
+        + timeout_ms : int
+        + threshold : int
+        + consecutiveFailures : int
+        + lastAlertAt : String
     }
-    class CheckHistory:::secondary {
+    class CheckHistory {
         <<체크 이력>>
-        +apiId : String FK
-        +checkedAt : String PK
-        +statusCode : int
-        +responseTimeMs : int
-        +isSuccess : boolean
+        + apiId : String FK
+        + checkedAt : String PK
+        + statusCode : int
+        + responseTimeMs : int
+        + isSuccess : boolean
     }
 
     MonitoredApi "1" --> "0..*" CheckHistory
-
-    classDef primary fill:#EEF0FF,stroke:#2D3580,stroke-width:2px,color:#1A1A1A
-    classDef secondary fill:#FFF0EA,stroke:#C8520A,stroke-width:2px,color:#1A1A1A
