@@ -1,0 +1,20 @@
+architecture-beta
+
+    group ext[External]
+    group aws[AWS VPC]
+    group ec2[EC2 Instance] in aws
+    group docker[Docker] in ec2
+    group prem[On Premises] in aws
+
+    service app(logos:apple)[iOS Watch] in ext
+    service api(logos:rust)[API Server] in docker
+    service cache(logos:aws-elasticache)[ElastiCache Redis] in docker
+    service vpn1(logos:aws-vpc)[Tailscale AWS] in docker
+    service vpn2(logos:aws-vpc)[Tailscale OnPrem] in prem
+    service gpu(logos:nvidia)[GPU Server] in prem
+
+    app:R --> L:api
+    api:R --> L:cache
+    api:T --> B:vpn1
+    vpn1:R --> L:vpn2
+    vpn2:R --> L:gpu

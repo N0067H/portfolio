@@ -1,0 +1,17 @@
+erDiagram
+    APPLE_USER {
+        string sub PK
+        string email
+        string name
+    }
+    USER_DEVICES {
+        string device_uuid PK
+        string device_name
+        string apple_user_id FK
+    }
+    QUERY_CACHE {
+        string key PK
+        string response
+    }
+
+    APPLE_USER ||--o{ USER_DEVICES : "1:N"

@@ -1,0 +1,19 @@
+classDiagram
+    direction LR
+    class MonitoredApi {
+        +String apiId
+        +String url
+        +int interval_sec
+        +int timeout_ms
+        +int threshold
+        +int consecutiveFailures
+        +String lastAlertAt
+    }
+    class CheckHistory {
+        +String apiId
+        +String checkedAt
+        +int statusCode
+        +int responseTimeMs
+        +int isSuccess
+    }
+    MonitoredApi "1" --> "0..*" CheckHistory : apiId

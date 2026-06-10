@@ -1,0 +1,20 @@
+architecture-beta
+
+    group ext[External]
+    group aws[AWS Cloud]
+    group ec2[EC2 Instance] in aws
+    group dock[Docker] in ec2
+    group data[Data] in aws
+    group notify[Notification] in aws
+    group mon[Monitoring] in aws
+
+    service gha(logos:github-actions)[GitHub Actions] in ext
+    service sb(logos:spring-icon)[Spring Boot] in dock
+    service ddb(logos:aws-dynamodb)[DynamoDB] in data
+    service sns(logos:aws-sns)[SNS] in notify
+    service cw(logos:aws-cloudwatch)[CloudWatch] in mon
+
+    gha:R --> L:sb
+    sb:R --> L:ddb
+    sb:R --> L:sns
+    sb:T --> B:cw

@@ -1,0 +1,23 @@
+architecture-beta
+
+    group ext[External]
+    group aws[AWS Cloud]
+    group ec2[EC2 Instance] in aws
+    group dock[Docker] in ec2
+    group stores[Data Stores] in aws
+    group mon[Monitoring] in aws
+
+    service gha(logos:github-actions)[GitHub Actions] in ext
+    service sb(logos:spring-icon)[Spring Boot] in dock
+    service pg(logos:postgresql)[PostgreSQL] in stores
+    service rdb(logos:redis)[Redis] in stores
+    service els(logos:elasticsearch)[Elasticsearch] in stores
+    service prom(logos:prometheus)[Prometheus] in mon
+    service graf(logos:grafana)[Grafana] in mon
+
+    gha:R --> L:sb
+    sb:R --> L:pg
+    sb:R --> L:rdb
+    sb:R --> L:els
+    sb:T --> B:prom
+    prom:R --> L:graf

@@ -1,0 +1,199 @@
+<mxfile host="app.diagrams.net" version="21.0.0" type="device">
+  <diagram name="JobLens Infrastructure" id="joblens-infra">
+    <mxGraphModel dx="800" dy="400" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- External services row (top) -->
+
+        <!-- External Job APIs -->
+        <mxCell id="ext-jobs" value="채용 공고 API" style="shape=mxgraph.network.cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="18" y="18" width="118" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Claude API (Anthropic brand color) -->
+        <mxCell id="claude" value="Claude API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=none;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="158" y="18" width="100" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="claude-sub" value="Anthropic" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="158" y="56" width="100" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- SMTP -->
+        <mxCell id="smtp" value="Gmail SMTP" style="shape=mxgraph.network.cloud;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="278" y="18" width="100" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- GitHub Actions -->
+        <mxCell id="gha" value="GitHub Actions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#24292E;strokeColor=none;fontColor=#ffffff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="398" y="24" width="115" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gha-sub" value="CI / CD" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="398" y="54" width="115" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- User browser -->
+        <mxCell id="user" value="사용자" style="shape=mxgraph.cisco.computers_and_peripherals.pc;dashed=0;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="708" y="18" width="48" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Next.js frontend box -->
+        <mxCell id="nextjs-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A1A1A;strokeColor=#555;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="628" y="110" width="148" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nextjs-label" value="▲  Next.js 15" style="text;html=1;fontStyle=1;fontSize=12;fontColor=#ffffff;align=center;" vertex="1" parent="1">
+          <mxGeometry x="628" y="118" width="148" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="nextjs-sub" value="App Router  ·  TanStack Query  ·  Zustand" style="text;html=1;fontSize=8;fontColor=#aaa;align=center;" vertex="1" parent="1">
+          <mxGeometry x="628" y="143" width="148" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="nextjs-sub2" value="SSR  +  CSR  혼합 렌더링" style="text;html=1;fontSize=8;fontColor=#aaa;align=center;" vertex="1" parent="1">
+          <mxGeometry x="628" y="158" width="148" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- Docker Compose boundary -->
+        <mxCell id="docker-bg" value="" style="rounded=2;whiteSpace=wrap;html=1;fillColor=#EBF5FB;strokeColor=#2496ED;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="18" y="100" width="590" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="docker-label" value="🐳  Docker Compose" style="text;html=1;fontStyle=1;fontSize=11;fontColor=#2496ED;align=left;" vertex="1" parent="1">
+          <mxGeometry x="26" y="106" width="175" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Spring Boot container -->
+        <mxCell id="spring-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1FBF0;strokeColor=#6DB33F;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="35" y="135" width="360" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="spring-header" value="🍃  Spring Boot 3 · Java 21" style="text;html=1;fontStyle=1;fontSize=11;fontColor=#4a8f2a;align=left;" vertex="1" parent="1">
+          <mxGeometry x="44" y="141" width="240" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Inside Spring Boot -->
+        <mxCell id="api-layer" value="REST API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="48" y="170" width="80" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="api-sub" value="Controller  /  Service  /  Repository" style="text;html=1;fontSize=8;align=center;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="35" y="200" width="108" height="14" as="geometry" />
+        </mxCell>
+
+        <mxCell id="scheduler-box" value="Job Collector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="168" y="170" width="95" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="scheduler-sub" value="@Scheduled  ·  @Async" style="text;html=1;fontSize=8;align=center;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="158" y="200" width="115" height="14" as="geometry" />
+        </mxCell>
+
+        <mxCell id="event-box" value="Event Pipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="170" width="95" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="event-sub" value="Tag 추출  →  알림 매칭" style="text;html=1;fontSize=8;align=center;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="272" y="200" width="122" height="14" as="geometry" />
+        </mxCell>
+
+        <mxCell id="email-svc" value="Email Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="48" y="235" width="95" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cache-box" value="Cache Manager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="168" y="235" width="105" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="cache-sub" value="검색 5-10분  ·  트렌드 1h" style="text;html=1;fontSize=8;align=center;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="158" y="265" width="125" height="14" as="geometry" />
+        </mxCell>
+
+        <mxCell id="queryDsl" value="QueryDSL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#fff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="295" y="235" width="85" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- PostgreSQL container -->
+        <mxCell id="pg-bg" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#336791;strokeColor=#1e4d72;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="415" y="190" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="pg-label" value="PostgreSQL 16" style="text;html=1;fontStyle=1;fontSize=10;fontColor=#ffffff;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="230" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="pg-sub" value="users · jobs · alerts" style="text;html=1;fontSize=8;fontColor=#9ec8f0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="248" width="110" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- Redis container -->
+        <mxCell id="redis-bg" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#DC382D;strokeColor=#a01e18;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="415" y="300" width="100" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="redis-label" value="Redis 7" style="text;html=1;fontStyle=1;fontSize=10;fontColor=#ffffff;align=center;" vertex="1" parent="1">
+          <mxGeometry x="415" y="325" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="redis-sub" value="cache · token" style="text;html=1;fontSize=8;fontColor=#f1a9a5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="415" y="343" width="100" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES -->
+
+        <!-- User → Next.js -->
+        <mxCell id="e-user-nx" style="rounded=0;html=1;strokeColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="user" target="nextjs-bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-user-nx-l" value="HTTPS" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-user-nx">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- Next.js → Spring Boot (REST API) -->
+        <mxCell id="e-nx-api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6DB33F;strokeWidth=2;" edge="1" source="nextjs-bg" target="api-layer" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-nx-api-l" value="REST" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-nx-api">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- External Job APIs → Job Collector -->
+        <mxCell id="e-ext-jc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="ext-jobs" target="scheduler-box" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-jc-l" value="HTTP" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-ext-jc">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- Claude API → Event Pipeline -->
+        <mxCell id="e-claude-ep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#D97706;strokeWidth=2;" edge="1" source="claude" target="event-box" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-claude-ep-l" value="AI 태그 추출" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-claude-ep">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- Email Service → SMTP -->
+        <mxCell id="e-es-smtp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" source="email-svc" target="smtp" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-es-smtp-l" value="발송" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-es-smtp">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- Spring Boot → PostgreSQL -->
+        <mxCell id="e-sp-pg" style="rounded=0;html=1;strokeColor=#336791;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="spring-bg" target="pg-bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sp-pg-l" value="JPA" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-sp-pg">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- Spring Boot → Redis -->
+        <mxCell id="e-sp-rd" style="rounded=0;html=1;strokeColor=#DC382D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="spring-bg" target="redis-bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sp-rd-l" value="캐시" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-sp-rd">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <!-- GitHub Actions → Docker boundary (CI deploys) -->
+        <mxCell id="e-gha-docker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#24292E;strokeWidth=1.5;dashed=1;" edge="1" source="gha" target="docker-bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-gha-l" value="배포" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e-gha-docker">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

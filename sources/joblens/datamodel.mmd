@@ -1,0 +1,61 @@
+erDiagram
+    users {
+        bigint id PK
+        string email
+        string name
+        string provider
+    }
+    user_alerts {
+        bigint id PK
+        bigint user_id FK
+        jsonb conditions
+        boolean active
+    }
+    notifications {
+        bigint id PK
+        bigint user_id FK
+        bigint job_posting_id FK
+        timestamp sent_at
+    }
+    job_postings {
+        bigint id PK
+        bigint company_id FK
+        string title
+        string url
+        date deadline
+    }
+    bookmarked_jobs {
+        bigint user_id FK
+        bigint job_posting_id FK
+    }
+    application_records {
+        bigint id PK
+        bigint user_id FK
+        bigint job_posting_id FK
+        string status
+    }
+    companies {
+        bigint id PK
+        string name
+    }
+    tech_tags {
+        bigint id PK
+        string name
+    }
+    trend_snapshots {
+        bigint id PK
+        bigint tech_tag_id FK
+        int count
+        date snapshot_date
+    }
+
+    users ||--o{ user_alerts : ""
+    users ||--o{ notifications : ""
+    users ||--o{ bookmarked_jobs : ""
+    users ||--o{ application_records : ""
+    companies ||--o{ job_postings : ""
+    job_postings ||--o{ notifications : ""
+    job_postings ||--o{ bookmarked_jobs : ""
+    job_postings ||--o{ application_records : ""
+    job_postings }o--o{ tech_tags : ""
+    tech_tags ||--o{ trend_snapshots : ""

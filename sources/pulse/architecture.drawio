@@ -1,0 +1,151 @@
+<mxfile host="app.diagrams.net" version="21.0.0" type="device">
+  <diagram name="Pulse Infrastructure" id="pulse-infra">
+    <mxGraphModel dx="800" dy="400" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- AWS Cloud boundary -->
+        <mxCell id="aws-bg" value="" style="rounded=2;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#FF9900;strokeWidth=2;dashed=0;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="70" y="15" width="715" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="aws-logo" value="AWS" style="text;html=1;fontStyle=1;fontSize=12;fontColor=#FF9900;align=left;" vertex="1" parent="1">
+          <mxGeometry x="80" y="20" width="50" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Terraform IaC badge (bottom of AWS box) -->
+        <mxCell id="terraform" value="Terraform IaC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B42BC;strokeColor=none;fontColor=#ffffff;fontSize=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="342" width="110" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- User -->
+        <mxCell id="user" value="사용자" style="shape=mxgraph.cisco.computers_and_peripherals.pc;dashed=0;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="8" y="30" width="48" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- CloudFront -->
+        <mxCell id="cloudfront" value="CloudFront" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#8C4FFF;labelBackgroundColor=none;align=center;html=1;fontSize=10;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;" vertex="1" parent="1">
+          <mxGeometry x="336" y="28" width="56" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- S3 -->
+        <mxCell id="s3" value="S3" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#3F8624;labelBackgroundColor=none;align=center;html=1;fontSize=10;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+          <mxGeometry x="118" y="165" width="56" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-sub" value="정적 프론트엔드" style="text;html=1;fontSize=9;align=center;fontColor=#555;" vertex="1" parent="1">
+          <mxGeometry x="96" y="224" width="100" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 container box -->
+        <mxCell id="ec2-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#ED7100;strokeWidth=1.5;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="270" y="155" width="196" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 icon -->
+        <mxCell id="ec2-icon" value="EC2" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=none;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="275" y="162" width="40" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Spring Boot inside EC2 -->
+        <mxCell id="springboot" value="Spring Boot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6DB33F;strokeColor=none;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="323" y="166" width="130" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="scheduler-label" value="CheckScheduler  ·  BlockingWorker" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="272" y="200" width="190" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="thread-label" value="per-API ScheduledExecutorService" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="272" y="215" width="190" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="worker-label" value="단건 UpdateItem  ·  연속실패 감지" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="272" y="230" width="190" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="rest-label" value="REST API  ·  등록 / 조회 / 이력" style="text;html=1;fontSize=8;align=center;fontColor=#888;" vertex="1" parent="1">
+          <mxGeometry x="272" y="248" width="190" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- DynamoDB -->
+        <mxCell id="dynamodb" value="DynamoDB" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#C7131F;labelBackgroundColor=none;align=center;html=1;fontSize=10;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;" vertex="1" parent="1">
+          <mxGeometry x="572" y="155" width="56" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="dynamo-sub" value="TTL 30일" style="text;html=1;fontSize=9;align=center;fontColor=#555;" vertex="1" parent="1">
+          <mxGeometry x="570" y="213" width="60" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- SNS -->
+        <mxCell id="sns" value="SNS" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=none;align=center;html=1;fontSize=10;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" vertex="1" parent="1">
+          <mxGeometry x="572" y="270" width="56" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- CloudWatch -->
+        <mxCell id="cloudwatch" value="CloudWatch" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=none;align=center;html=1;fontSize=10;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" vertex="1" parent="1">
+          <mxGeometry x="118" y="270" width="56" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- External APIs (outside AWS) -->
+        <mxCell id="ext-apis" value="외부 API (모니터링 대상)" style="shape=mxgraph.network.cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="625" y="22" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Email (outside AWS) -->
+        <mxCell id="email" value="사용자 이메일" style="shape=mxgraph.cisco.computers_and_peripherals.email;fillColor=#fff2cc;strokeColor=#d6b656;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="663" y="276" width="50" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES -->
+        <mxCell id="e1" style="rounded=0;html=1;strokeColor=#8C4FFF;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="user" target="cloudfront" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1l" value="HTTPS" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e1">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3F8624;strokeWidth=2;" edge="1" source="cloudfront" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2l" value="정적" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e2">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#ED7100;strokeWidth=2;" edge="1" source="cloudfront" target="ec2-bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3l" value="/api/*" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e3">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="ec2-bg" target="ext-apis" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4l" value="GET 헬스체크" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e4">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C7131F;strokeWidth=2;" edge="1" source="ec2-bg" target="dynamodb" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5l" value="UpdateItem" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e5">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#E7157B;strokeWidth=2;" edge="1" source="ec2-bg" target="sns" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6l" value="Publish" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e6">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e7" style="rounded=0;html=1;strokeColor=#E7157B;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="sns" target="email" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#E7157B;strokeWidth=1;dashed=1;" edge="1" source="ec2-bg" target="cloudwatch" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8l" value="메트릭" style="edgeLabel;html=1;fontSize=9;background=#ffffff;" vertex="1" connectable="0" parent="e8">
+          <mxGeometry relative="0.5" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
