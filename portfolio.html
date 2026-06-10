@@ -557,7 +557,7 @@
 <!-- ===== SECTION: header ===== -->
 <header id="site-header">
   <div class="header-inner">
-    <div class="site-title">류승엽 <em>· Backend</em></div>
+    <div class="site-title">류승엽</div>
     <div class="header-right">
       <nav class="main-nav">
         <a href="#about">About</a>
@@ -620,12 +620,12 @@
 <script id="data" type="application/json">
 {
   "hero": {
-    "name": "류승엽",
+    "name": "백엔드 개발자 류승엽",
     "role": "",
     "tagline": [
-      "안녕하세요! 관행이 아닌 경험에 따른 근거로 기술을 선택하는 백엔드 개발자입니다.",
-      "Elasticsearch 도입 p99 -78%, 캐시 키 정규화로 히트율 6배를 직접 측정했습니다.",
-      "Java와 Rust로 문제에 맞는 언어를 골랐고, 설계 결정마다 트레이드오프를 명시적으로 기록합니다."
+      "안녕하세요! 관행이 아닌 <strong>경험에 따른 근거로 기술을 선택</strong>하는 백엔드 개발자입니다.",
+      "<strong>Elasticsearch 도입 p99 -78%</strong>, <strong>캐시 키 정규화로 히트율 6배</strong>를 직접 측정했습니다.",
+      "<strong>Java와 Rust</strong>로 문제에 맞는 언어를 골랐고, 설계 결정마다 <strong>트레이드오프를 명시적으로 기록</strong>합니다."
     ],
     "contact": {
       "email": "",
@@ -984,7 +984,7 @@
       <h1 class="hero-name">${e(name)}</h1>
       ${role ? `<div class="hero-role">${e(role)}</div>` : ''}
       ${contacts.length ? `<div class="hero-contact">${contacts.join('')}</div>` : ''}
-      <p class="hero-tagline">${(Array.isArray(tagline) ? tagline : [tagline]).map(e).join('<br>')}</p>
+      <p class="hero-tagline">${(Array.isArray(tagline) ? tagline : [tagline]).map(r).join('<br>')}</p>
     `;
   }
 
