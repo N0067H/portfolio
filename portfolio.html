@@ -700,10 +700,16 @@
       "dataModel": "users ──(1:N)── user_alerts (조건 JSONB)\n      ──(1:N)── notifications\n      ──(M:N)── job_postings ── bookmarked_jobs\n                             └── application_records\ncompanies ──(1:N)── job_postings ──(M:N)── tech_tags\n                                           └──(1:N)── trend_snapshots",
       "dataModelImage": "sources/joblens/datamodel.svg",
       "features": [
-        "@Scheduled와 @Async로 비동기 수집 파이프라인을 구성했다. JobCollectedEvent 발행 후 JobIndexedEvent 순차 처리로 도메인 간 결합 없이 기능을 확장한다",
-        "Elasticsearch와 nori 형태소 분석기로 한국어 검색을 구현했다. ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성을 확보한다",
-        "Redis로 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성을 단일 인프라로 처리한다",
-        "JSONB로 저장한 알림 조건과 신규 공고를 매칭해 조건에 맞는 사용자에게 JavaMail로 즉시 이메일을 발송한다",
+        "원티드, 잡코리아, 링크드인 공고를 자동 수집해 단일 인터페이스에서 검색한다",
+        "기술 스택과 키워드 조건을 설정하면 조건에 맞는 공고 등록 시 이메일로 즉시 알린다",
+        "기술 스택별 공고 수 변화를 주간 트렌드로 집계해 수치로 제공한다",
+        "공고 북마크와 지원 상태를 기록한다"
+      ],
+      "implPoints": [
+        "@Scheduled, @Async, 이벤트 체인(JobCollectedEvent → JobIndexedEvent)으로 수집, 색인, 알림을 <strong>도메인 결합 없이</strong> 연결했다",
+        "ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성을 확보한다",
+        "Redis를 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성, Rate Limit 슬라이딩 윈도우 4가지 용도로 <strong>단일 인프라에 통합</strong>했다",
+        "Testcontainers로 ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong>을 달성했다",
         "<strong>Prometheus 커스텀 메트릭 7종</strong>을 수집하고 <strong>Grafana 17패널 대시보드</strong>로 시스템 상태를 시각화한다"
       ],
       "troubleshooting": [
@@ -781,10 +787,17 @@
       "dataModel": "MonitoredApi\n  PK: apiId\n  url, interval, timeout, threshold\n  consecutiveFailures, lastAlertAt\n\nCheckHistory\n  PK: apiId\n  SK: ISO 8601 timestamp  (사전순 = 시간순)\n  statusCode, responseTimeMs, success",
       "dataModelImage": "sources/pulse/datamodel.svg",
       "features": [
-        "API별로 독립된 ScheduledExecutorService를 사용해 체크 주기를 분산하고 동시 요청 집중을 해소했다",
-        "CompletableFuture로 HTTP 체크를 <strong>논블로킹 처리</strong>해 I/O 스레드를 즉시 반환한다. DB 저장, 알림 등 블로킹 후처리는 <strong>전용 스레드 풀로 분리</strong>해 I/O 처리와 무관하게 스케일한다",
-        "연속 실패 횟수가 임계값을 초과하면 AWS SNS로 이메일을 발송한다. 쿨다운 시간 설정으로 <strong>동일 장애의 중복 알림을 제거</strong>했다",
-        "Terraform으로 전체 인프라를 코드로 관리한다. CloudFront 단일 배포에서 API 요청은 EC2로, 정적 파일은 S3로 경로별 오리진을 분리했다"
+        "등록한 API 엔드포인트를 설정한 주기마다 자동으로 헬스체크한다",
+        "연속 실패 횟수가 임계값을 초과하면 이메일로 즉시 알린다. 쿨다운 설정으로 중복 알림을 방지한다",
+        "체크 결과 이력을 저장해 장애 시작 시점과 지속 시간을 사후에 파악할 수 있다",
+        "CloudFront 단일 배포에서 API 요청은 EC2로, 정적 파일은 S3로 경로별 오리진을 분리했다"
+      ],
+      "implPoints": [
+        "앱 시작 시 1회 전체 로드 후 API별 독립 ScheduledExecutorService로 등록해 <strong>체크 주기당 DB 읽기를 제거</strong>했다. API 1,000개로 늘어도 체크 1회당 DB 호출은 0건이다",
+        "CompletableFuture로 HTTP 체크를 <strong>논블로킹 처리</strong>하고 블로킹 후처리는 <strong>전용 스레드 풀로 분리</strong>했다",
+        "UpdateItem 단일 호출로 갱신 필드를 통합해 DB 쓰기를 체크 1회당 2회에서 <strong>1회로 감소(-50%)</strong>했다",
+        "소트키를 ISO 8601 형식으로 설계해 DynamoDB Query ScanIndexForward=false + Limit=N으로 정렬과 페이징을 DB에서 처리했다. 이력 조회 행 수 <strong>최대 43,200개에서 요청 수만큼으로 감소(-99.9%)</strong>",
+        "Terraform으로 EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>한다"
       ],
       "troubleshooting": [
         {
@@ -853,11 +866,15 @@
       "dataModel": "users\n  PK: user_id\n  apple_sub  (Apple OAuth 식별자)\n  created_at\n\nchat_history\n  PK: id\n  user_id, query_hash  (정규화된 문자열 해시)\n  query_text, response_text\n  created_at",
       "dataModelImage": "sources/qiri/datamodel.svg",
       "features": [
-        "Sign in with Apple로 OAuth 인증을 구현했다. Apple 공개 키를 동적으로 조회해 JWT 서명을 검증하고 토큰 위조를 차단한다",
-        "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 동일 의미 쿼리를 <strong>단일 캐시 키로 수렴</strong>한다. 정규화된 문자열을 해시화해 캐시 키로 사용한다",
-        "LLM 스트리밍 응답을 메모리에 버퍼링 후 완성된 상태로 캐시에 저장한다. 캐시 히트 시 <strong>LLM 호출을 완전히 생략</strong>한다",
+        "애플워치 손 제스처로 LLM 챗봇에 질문하고 응답을 받는다",
+        "Sign in with Apple OAuth로 인증하고 대화 이력을 관리한다",
+        "EC2와 온프레미스 GPU 서버를 Tailscale 사설 네트워크로 연결해 외부 노출 없이 LLM을 호출한다"
+      ],
+      "implPoints": [
+        "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 동일 의미 쿼리를 <strong>단일 캐시 키로 수렴</strong>했다. 캐시 히트율 약 10%에서 약 60%로 향상",
+        "LLM 스트리밍 응답을 메모리에 버퍼링 후 완성된 상태로 저장해 캐시 히트 시 <strong>LLM 호출을 완전히 생략</strong>한다. 초기 지연 소폭 증가를 감수한 <strong>의도적 트레이드오프</strong>",
         "<strong>DashMap 락 프리 동시성 해시맵</strong>으로 다중 요청 환경에서 캐시 읽기, 쓰기 경합을 제거했다",
-        "EC2 메인 서버와 온프레미스 LLM 서버를 Tailscale 사설 네트워크로 연결해 외부 접근을 차단한 내부 통신 환경을 구성했다"
+        "Apple 공개 키를 동적으로 조회해 JWT 서명을 검증하고 토큰 위조를 차단한다"
       ],
       "troubleshooting": [
         {
@@ -1057,6 +1074,10 @@
           ${hr()}
           ${lbl('핵심 기능')}
           <ul class="features-list">${li('',p.features)}</ul>
+
+          ${hr()}
+          ${lbl('구현 포인트')}
+          <ul class="impl-list">${li('',p.implPoints||[])}</ul>
 
           ${hr()}
           ${lbl('트러블슈팅')}
