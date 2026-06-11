@@ -423,28 +423,28 @@
     .ts-val { font-size: var(--fs-base); line-height: 1.75; }
 
     /* Performance */
-    .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
-    .perf-card {
-      border: 1px solid var(--divider);
-      border-radius: var(--radius);
-      padding: var(--gap-lg);
-    }
-    .perf-lbl {
+    .perf-table { width: 100%; border-collapse: collapse; }
+    .perf-table th {
       font-size: var(--fs-xs);
       font-weight: var(--fw-bold);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: var(--gap-sm);
+      padding: var(--gap-sm) var(--gap);
+      text-align: left;
+      border-bottom: 2px solid var(--divider);
     }
-    .perf-lbl.before { color: #888; }
-    .perf-lbl.after { color: var(--accent); font-weight: var(--fw-normal); }
-    .perf-val {
-      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    .perf-table th.col-before { color: #888; }
+    .perf-table th.col-after { color: var(--accent); }
+    .perf-table td {
+      padding: var(--gap-sm) var(--gap);
+      border-bottom: 1px solid var(--divider);
       font-size: var(--fs-sm);
-      font-weight: var(--fw-bold);
-      white-space: pre-line;
-      line-height: 1.6;
+      vertical-align: top;
     }
+    .perf-table td.col-label { font-weight: var(--fw-bold); }
+    .perf-table td.col-before { color: #888; }
+    .perf-table td.col-after { color: var(--accent); font-weight: var(--fw-bold); }
+    .perf-table tr:last-child td { border-bottom: none; }
 
     /* Retrospective */
     .retro-block {
@@ -532,7 +532,7 @@
       .ts-body { grid-template-columns: 1fr; }
       .ts-cell { border-right: none; border-bottom: 1px solid var(--divider); }
       .ts-cell:last-child { border-bottom: none; }
-      .perf-grid { grid-template-columns: 1fr; }
+      .perf-table th, .perf-table td { padding: var(--gap-sm) 8px; }
       .small-grid { grid-template-columns: 1fr; }
       .mp-header { padding: var(--gap) var(--gap-lg); }
       .mp-body { padding: var(--gap-lg); }
@@ -548,11 +548,9 @@
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; color: var(--text) !important; font-size: 11px; }
       #site-header { position: static; }
       .main-project { page-break-inside: avoid; break-inside: avoid; }
-      .ts-block, .perf-grid, .small-card { page-break-inside: avoid; break-inside: avoid; }
+      .ts-block, .perf-table, .small-card { page-break-inside: avoid; break-inside: avoid; }
       .section-gap { margin-top: 36px; }
       .about-grid { grid-template-columns: 1fr 1fr !important; }
-      .perf-grid { grid-template-columns: 1fr 1fr !important; }
-      .perf-card { border: 1px solid #ccc !important; }
       @page {
         size: A4;
         margin: 10mm 10mm 16mm 10mm;
@@ -689,9 +687,9 @@
         {"value": "7종", "label": "커스텀 Prometheus 메트릭"}
       ],
       "problem": [
-        "원티드, 잡코리아, 링크드인 3개 플랫폼에 공고가 분산되어 있어 매일 직접 순회해야 했다. 마감이 짧은 공고는 수동 확인 주기 사이에 놓치는 경우가 생겼다",
-        "원하는 기술 스택 공고가 게시돼도 실시간으로 알 방법이 없어 지원 타이밍을 놓쳤다",
-        "Java, Rust 등 기술 스택별 채용 수요 변화를 수치 없이 감으로만 판단하고 있었다"
+        "구직 중 원티드, 잡코리아, 링크드인을 매일 따로 확인해야 했고, 마감이 짧은 공고는 다음 날 이미 닫혀 있었다",
+        "관심 기술 스택 공고가 올라와도 실시간으로 알 방법이 없어 지원 타이밍을 놓치는 일이 반복됐다",
+        "Java나 Rust 같은 기술의 채용 수요가 실제로 얼마나 되는지, 수치 없이 감으로만 판단하고 있었다"
       ],
       "stack": [
         ["Language", "Java"],
@@ -710,25 +708,25 @@
         ["Search", "nori"]
       ],
       "techReason": [
-        "Java: 공고 수집, 이메일 등 I/O 바운드 작업을 WebFlux 없이 수백 동시 처리. 명령형 코드를 유지해 복잡도를 억제했다",
-        "Elasticsearch, nori: PG LIKE sequential scan에서 <strong>p99 237ms</strong>를 관측한 뒤 전환. 한국어 형태소 분리로 검색 품질을 개선해 <strong>p99 49ms(-78%)</strong>로 단축했다",
-        "Redis 다중 용도: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합했다",
-        "Testcontainers: ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong>을 달성했다"
+        "Java: 공고 수집, 이메일 등 I/O 바운드 작업을 WebFlux 없이 수백 동시 처리. 명령형 코드를 유지해 복잡도 억제",
+        "Elasticsearch, nori: PG LIKE sequential scan에서 <strong>p99 237ms</strong>를 관측한 뒤 전환. 한국어 형태소 분리로 검색 품질을 개선해 <strong>p99 49ms(-78%)</strong>로 단축",
+        "Redis 다중 용도: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합",
+        "Testcontainers: ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong> 달성"
       ],
       "dataModel": "users ──(1:N)── user_alerts (조건 JSONB)\n      ──(1:N)── notifications\n      ──(M:N)── job_postings ── bookmarked_jobs\n                             └── application_records\ncompanies ──(1:N)── job_postings ──(M:N)── tech_tags\n                                           └──(1:N)── trend_snapshots",
       "dataModelImage": "sources/joblens/datamodel.svg",
       "features": [
-        "원티드, 잡코리아, 링크드인 공고를 자동 수집해 단일 인터페이스에서 검색한다",
-        "기술 스택과 키워드 조건을 설정하면 조건에 맞는 공고 등록 시 이메일로 즉시 알린다",
-        "기술 스택별 공고 수 변화를 주간 트렌드로 집계해 수치로 제공한다",
-        "공고 북마크와 지원 상태를 기록한다"
+        "원티드, 잡코리아, 링크드인 공고를 자동 수집해 단일 인터페이스에서 검색",
+        "기술 스택과 키워드 조건을 설정하면 조건에 맞는 공고 등록 시 이메일로 즉시 알림",
+        "기술 스택별 공고 수 변화를 주간 트렌드로 집계해 수치로 제공",
+        "공고 북마크와 지원 상태 기록"
       ],
       "implPoints": [
-        "@Scheduled, @Async, 이벤트 체인(JobCollectedEvent → JobIndexedEvent)으로 수집, 색인, 알림을 <strong>도메인 결합 없이</strong> 연결했다",
-        "ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성을 확보한다",
-        "Redis를 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성, Rate Limit 슬라이딩 윈도우 4가지 용도로 <strong>단일 인프라에 통합</strong>했다",
-        "Testcontainers로 ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong>을 달성했다",
-        "<strong>Prometheus 커스텀 메트릭 7종</strong>을 수집하고 <strong>Grafana 17패널 대시보드</strong>로 시스템 상태를 시각화한다"
+        "@Scheduled, @Async, 이벤트 체인(JobCollectedEvent → JobIndexedEvent)으로 수집, 색인, 알림을 <strong>도메인 결합 없이</strong> 연결",
+        "ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성 확보",
+        "Redis를 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성, Rate Limit 슬라이딩 윈도우 4가지 용도로 <strong>단일 인프라에 통합</strong>",
+        "Testcontainers로 ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong> 달성",
+        "<strong>Prometheus 커스텀 메트릭 7종</strong>을 수집하고 <strong>Grafana 17패널 대시보드</strong>로 시스템 상태 시각화"
       ],
       "troubleshooting": [
         {
@@ -751,16 +749,20 @@
         }
       ],
       "performance": {
-        "before": "PG FTS (96건 기준)\np99: 237ms / max: 329ms\n캐시 미스 p95: 24ms",
-        "after": "ES + nori\np99: 49ms (-78%) / max: 56ms (-83%)\n캐시 히트 p95: 8ms"
+        "rows": [
+          {"label": "검색 엔진", "before": "PG FTS (96건)", "after": "ES + nori"},
+          {"label": "p99", "before": "237ms", "after": "49ms (-78%)"},
+          {"label": "max", "before": "329ms", "after": "56ms (-83%)"},
+          {"label": "캐시 p95", "before": "미스 24ms", "after": "히트 8ms"}
+        ]
       },
       "retrospective": "Race Condition이 발생하고 나서야 이벤트 순서 의존성을 설계에 반영했다. 단순하게 시작하고 병목이 실측으로 확인될 때 복잡도를 추가하는 순서가 맞다.",
       "future": [
-        "nori user_dictionary에 기술 외래어를 등록해 한국어 검색 품질을 개선한다",
-        "JobCollector 구현체 교체만으로 실 크롤러를 연동할 수 있다. 인터페이스 구조는 이미 준비됐다",
-        "트랜잭셔널 아웃박스 패턴을 도입해 앱 재시작 시 ApplicationEvent 유실을 제거한다",
-        "Blue-Green 배포를 도입해 Docker Compose 재시작 다운타임을 없앤다",
-        "ECS Fargate 전환을 위한 Dockerfile 표준화를 완료했다. 스케일 아웃 필요 시 즉시 전환 가능하다"
+        "nori user_dictionary에 기술 외래어를 등록해 한국어 검색 품질 개선",
+        "JobCollector 구현체 교체만으로 실 크롤러 연동 가능. 인터페이스 구조 준비 완료",
+        "트랜잭셔널 아웃박스 패턴을 도입해 앱 재시작 시 ApplicationEvent 유실 제거",
+        "Blue-Green 배포를 도입해 Docker Compose 재시작 다운타임 제거",
+        "ECS Fargate 전환을 위한 Dockerfile 표준화 완료. 스케일 아웃 필요 시 즉시 전환 가능"
       ]
     },
     {
@@ -780,8 +782,8 @@
       "archW": 1918,
       "archH": 1685,
       "problem": [
-        "운영 중인 API가 다운돼도 직접 요청을 보내보기 전까지 인지할 수 없었다. 장애 감지가 사용자 문의에 의존하는 구조였다",
-        "체크 이력을 저장하지 않아 장애 시작 시점과 지속 시간을 사후에 파악할 수 없었다. 포스트모텀 작성이 불가능했다"
+        "개인 프로젝트 서버가 다운돼도 직접 요청을 보내보기 전까지는 장애 여부조차 알 수 없었다",
+        "이력을 남기지 않아 장애 시작 시점과 지속 시간을 확인할 수 없었고, 포스트모텀 작성도 불가능했다"
       ],
       "stack": [
         ["Language", "Java"],
@@ -798,24 +800,24 @@
         ["Test", "JUnit 5"]
       ],
       "techReason": [
-        "DynamoDB: 온디맨드 과금으로 <strong>유휴 상태 비용을 제로로 유지</strong>했다. 단순 PK/SK 조회가 주를 이루는 접근 패턴에 최적이었고, RDS 대비 스키마 관리 없이 빠르게 배포했다",
-        "인메모리 스케줄: 앱 시작 시 1회 전체 로드 후 API별 독립 스케줄로 관리해 <strong>체크 주기당 DB 읽기를 제거</strong>했다. API가 1,000개로 늘어도 <strong>체크 1회당 DB 호출은 0건</strong>이다",
-        "Terraform: EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 환경 재현성을 확보했다. <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>하고 변경 이력을 git으로 추적한다"
+        "DynamoDB: 온디맨드 과금으로 <strong>유휴 상태 비용을 제로로 유지</strong>. 단순 PK/SK 조회가 주를 이루는 접근 패턴에 최적이었고, RDS 대비 스키마 관리 없이 빠르게 배포",
+        "인메모리 스케줄: 앱 시작 시 1회 전체 로드 후 API별 독립 스케줄로 관리해 <strong>체크 주기당 DB 읽기 제거</strong>. API가 1,000개로 늘어도 <strong>체크 1회당 DB 호출은 0건</strong>",
+        "Terraform: EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 환경 재현성 확보. <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>하고 변경 이력을 git으로 추적"
       ],
       "dataModel": "MonitoredApi\n  PK: apiId\n  url, interval, timeout, threshold\n  consecutiveFailures, lastAlertAt\n\nCheckHistory\n  PK: apiId\n  SK: ISO 8601 timestamp  (사전순 = 시간순)\n  statusCode, responseTimeMs, success",
       "dataModelImage": "sources/pulse/datamodel.svg",
       "features": [
-        "등록한 API 엔드포인트를 설정한 주기마다 자동으로 헬스체크한다",
-        "연속 실패 횟수가 임계값을 초과하면 이메일로 즉시 알린다. 쿨다운 설정으로 중복 알림을 방지한다",
-        "체크 결과 이력을 저장해 장애 시작 시점과 지속 시간을 사후에 파악할 수 있다",
-        "CloudFront 단일 배포에서 API 요청은 EC2로, 정적 파일은 S3로 경로별 오리진을 분리했다"
+        "등록한 API 엔드포인트를 설정한 주기마다 자동 헬스체크",
+        "연속 실패 횟수가 임계값을 초과하면 이메일로 즉시 알림. 쿨다운 설정으로 중복 알림 방지",
+        "체크 결과 이력을 저장해 장애 시작 시점과 지속 시간을 사후에 파악",
+        "CloudFront 단일 배포에서 API 요청은 EC2로, 정적 파일은 S3로 경로별 오리진 분리"
       ],
       "implPoints": [
-        "앱 시작 시 1회 전체 로드 후 API별 독립 ScheduledExecutorService로 등록해 <strong>체크 주기당 DB 읽기를 제거</strong>했다. API 1,000개로 늘어도 체크 1회당 DB 호출은 0건이다",
-        "CompletableFuture로 HTTP 체크를 <strong>논블로킹 처리</strong>하고 블로킹 후처리는 <strong>전용 스레드 풀로 분리</strong>했다",
-        "UpdateItem 단일 호출로 갱신 필드를 통합해 DB 쓰기를 체크 1회당 2회에서 <strong>1회로 감소(-50%)</strong>했다",
-        "소트키를 ISO 8601 형식으로 설계해 DynamoDB Query ScanIndexForward=false + Limit=N으로 정렬과 페이징을 DB에서 처리했다. 이력 조회 행 수 <strong>최대 43,200개에서 요청 수만큼으로 감소(-99.9%)</strong>",
-        "Terraform으로 EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>한다"
+        "앱 시작 시 1회 전체 로드 후 API별 독립 ScheduledExecutorService로 등록해 <strong>체크 주기당 DB 읽기 제거</strong>. API 1,000개로 늘어도 체크 1회당 DB 호출은 0건",
+        "CompletableFuture로 HTTP 체크를 <strong>논블로킹 처리</strong>하고 블로킹 후처리는 <strong>전용 스레드 풀로 분리</strong>",
+        "UpdateItem 단일 호출로 갱신 필드를 통합해 DB 쓰기를 체크 1회당 2회에서 <strong>1회로 감소(-50%)</strong>",
+        "소트키를 ISO 8601 형식으로 설계해 DynamoDB Query ScanIndexForward=false + Limit=N으로 정렬과 페이징을 DB에서 처리. 이력 조회 행 수 <strong>최대 43,200개에서 요청 수만큼으로 감소(-99.9%)</strong>",
+        "Terraform으로 EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 <strong>terraform apply 한 번으로 전체 스택 재구성</strong>"
       ],
       "troubleshooting": [
         {
@@ -838,14 +840,18 @@
         }
       ],
       "performance": {
-        "before": "DB 쓰기 / 체크 1회: 2회\n한 사이클 최대 쓰기 (API 50개): 150회\n이력 조회 행 수: 최대 43,200개\n알림 경로 추가 DB 호출: 2회",
-        "after": "DB 쓰기 / 체크 1회: 1회 (-50%)\n한 사이클 최대 쓰기 (API 50개): 100회 (-33%)\n이력 조회 행 수: 요청 수만큼 (-99.9%)\n알림 경로 추가 DB 호출: 0회"
+        "rows": [
+          {"label": "DB 쓰기 / 체크 1회", "before": "2회", "after": "1회 (-50%)"},
+          {"label": "한 사이클 최대 쓰기 (API 50개)", "before": "150회", "after": "100회 (-33%)"},
+          {"label": "이력 조회 행 수", "before": "최대 43,200개", "after": "요청 수만큼 (-99.9%)"},
+          {"label": "알림 경로 DB 호출", "before": "2회", "after": "0회"}
+        ]
       },
       "retrospective": "단순 구현에서 시작해 주기마다 전체 Scan하는 구조가 됐고, 읽기 비용 문제가 명확해진 뒤 설계를 전면 교체했다. DynamoDB는 데이터 접근 패턴을 키 설계에 먼저 반영하지 않으면 재설계 비용이 크다는 점을 확인했다.",
       "future": [
-        "멀티 인스턴스 확장을 위해 인메모리 스케줄을 DB 기반 분산 스케줄러로 전환한다. EC2 재시작 후에도 스케줄 상태를 유지한다",
-        "알림 쿨다운 상태를 Redis 외부 저장소로 분리해 다중 인스턴스 환경에서 중복 알림을 제거한다",
-        "집계 쿼리 복잡도가 높아지는 시점에 DynamoDB를 RDS로 전환한다"
+        "멀티 인스턴스 확장을 위해 인메모리 스케줄을 DB 기반 분산 스케줄러로 전환. EC2 재시작 후에도 스케줄 상태 유지",
+        "알림 쿨다운 상태를 Redis 외부 저장소로 분리해 다중 인스턴스 환경에서 중복 알림 제거",
+        "집계 쿼리 복잡도가 높아지는 시점에 DynamoDB를 RDS로 전환"
       ]
     },
     {
@@ -862,8 +868,8 @@
         {"value": "-31%", "label": "캐시 히트 p95 (~162ms → ~112ms)"}
       ],
       "problem": [
-        "한국어 조사 표현이 다른 동일한 의미의 질문이 캐시 미스로 처리되어 히트율이 약 10%에 머물렀다. 요청의 90%가 매번 LLM을 새로 호출했다",
-        "LLM 호출 평균 응답 시간이 약 40초였고 히트율이 낮아 대부분의 사용자 요청에서 이 지연이 그대로 노출됐다"
+        "애플워치의 손 제스처를 입력 수단으로 삼아 스마트폰 없이 AI와 대화하는 새로운 인터랙션 방식을 탐구하고 싶었다",
+        "팀이 보유한 온프레미스 GPU 서버를 활용해 외부 LLM API 없이 직접 모델을 서빙하는 구조를 설계하고자 했다"
       ],
       "stack": [
         ["Language", "Rust"],
@@ -877,22 +883,22 @@
         ["Network", "Tailscale"]
       ],
       "techReason": [
-        "Rust: <strong>GC 없는 런타임</strong>으로 응답 지연을 예측 가능하게 유지했다. 컴파일 타임 안전성 보장으로 <strong>런타임 오류 없이 메모리 안전성을 확보</strong>했다",
-        "Redis (Elasticache): 반복 쿼리의 LLM 호출을 캐시로 대체해 평균 응답 시간을 <strong>36s에서 16s로 단축</strong>했다. Elasticache 관리형 서비스로 캐시 인프라 운영 부담을 최소화했다",
-        "Tailscale: WireGuard 기반 암호화 터널로 EC2와 온프레미스 LLM 서버를 사설 네트워크로 연결했다. 복잡한 VPN 구성 없이 <strong>외부 노출 차단과 암호화 통신을 동시에 확보</strong>했다"
+        "Rust: <strong>GC 없는 런타임</strong>으로 응답 지연을 예측 가능하게 유지. 컴파일 타임 안전성 보장으로 <strong>런타임 오류 없이 메모리 안전성 확보</strong>",
+        "Redis (Elasticache): 반복 쿼리의 LLM 호출을 캐시로 대체해 평균 응답 시간을 <strong>36s에서 16s로 단축</strong>. Elasticache 관리형 서비스로 캐시 인프라 운영 부담 최소화",
+        "Tailscale: WireGuard 기반 암호화 터널로 EC2와 온프레미스 LLM 서버를 사설 네트워크로 연결. 복잡한 VPN 구성 없이 <strong>외부 노출 차단과 암호화 통신을 동시에 확보</strong>"
       ],
       "dataModel": "users\n  PK: user_id\n  apple_sub  (Apple OAuth 식별자)\n  created_at\n\nchat_history\n  PK: id\n  user_id, query_hash  (정규화된 문자열 해시)\n  query_text, response_text\n  created_at",
       "dataModelImage": "sources/qiri/datamodel.svg",
       "features": [
-        "애플워치 손 제스처로 LLM 챗봇에 질문하고 응답을 받는다",
-        "Sign in with Apple OAuth로 인증하고 대화 이력을 관리한다",
-        "EC2와 온프레미스 GPU 서버를 Tailscale 사설 네트워크로 연결해 외부 노출 없이 LLM을 호출한다"
+        "애플워치 손 제스처로 LLM 챗봇에 질문하고 응답 수신",
+        "Sign in with Apple OAuth로 인증하고 대화 이력 관리",
+        "EC2와 온프레미스 GPU 서버를 Tailscale 사설 네트워크로 연결해 외부 노출 없이 LLM 호출"
       ],
       "implPoints": [
-        "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 동일 의미 쿼리를 <strong>단일 캐시 키로 수렴</strong>했다. 캐시 히트율 약 10%에서 약 60%로 향상",
-        "LLM 스트리밍 응답을 메모리에 버퍼링 후 완성된 상태로 저장해 캐시 히트 시 <strong>LLM 호출을 완전히 생략</strong>한다. 초기 지연 소폭 증가를 감수한 <strong>의도적 트레이드오프</strong>",
-        "<strong>DashMap 락 프리 동시성 해시맵</strong>으로 다중 요청 환경에서 캐시 읽기, 쓰기 경합을 제거했다",
-        "Apple 공개 키를 동적으로 조회해 JWT 서명을 검증하고 토큰 위조를 차단한다"
+        "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 동일 의미 쿼리를 <strong>단일 캐시 키로 수렴</strong>. 캐시 히트율 약 10%에서 약 60%로 향상",
+        "LLM 스트리밍 응답을 메모리에 버퍼링 후 완성된 상태로 저장해 캐시 히트 시 <strong>LLM 호출을 완전히 생략</strong>. 초기 지연 소폭 증가를 감수한 <strong>의도적 트레이드오프</strong>",
+        "<strong>DashMap 락 프리 동시성 해시맵</strong>으로 다중 요청 환경에서 캐시 읽기, 쓰기 경합 제거",
+        "Apple 공개 키를 동적으로 조회해 JWT 서명을 검증하고 토큰 위조 차단"
       ],
       "troubleshooting": [
         {
@@ -909,13 +915,17 @@
         }
       ],
       "performance": {
-        "before": "Cache Hit Rate: ~10%\nAvg Latency: ~36s\nCache Hit p95: ~162ms\nCache Miss Latency: ~40s",
-        "after": "Cache Hit Rate: ~60% (+6배)\nAvg Latency: ~16s (-55%)\nCache Hit p95: ~112ms (-31%)\nCache Miss Latency: ~40s (동일)"
+        "rows": [
+          {"label": "Cache Hit Rate", "before": "~10%", "after": "~60% (+6배)"},
+          {"label": "Avg Latency", "before": "~36s", "after": "~16s (-55%)"},
+          {"label": "Cache Hit p95", "before": "~162ms", "after": "~112ms (-31%)"},
+          {"label": "Cache Miss Latency", "before": "~40s", "after": "~40s (동일)"}
+        ]
       },
       "retrospective": "부하 테스트로 히트율이 기대보다 낮다는 것을 발견하고 조사 정규화를 도입했다. 캐시 미스 지연은 정규화 전후 동일하게 유지됐고, 정규화는 기존 요청 품질을 보존하면서 히트율을 6배 높였다.",
       "future": [
-        "형태소 분석기 수준으로 정규화 커버리지를 확장해 히트율을 더 높인다",
-        "Elasticache 스냅샷 설정을 추가해 서버 재시작 후에도 캐시 히트율을 즉시 회복한다"
+        "형태소 분석기 수준으로 정규화 커버리지를 확장해 히트율 추가 향상",
+        "Elasticache 스냅샷 설정을 추가해 서버 재시작 후에도 캐시 히트율 즉시 회복"
       ]
     }
   ],
@@ -937,7 +947,7 @@
     {
       "title": "crypto-stream",
       "period": "개인, 2026.05 ~ 2026.06",
-      "desc": "Rust와 Kafka로 구축한 실시간 암호화폐 가격 스트리밍 API. Kafka 기반 수집/전달 분리와 SSE 브로드캐스트 채널 구조로 평균 지연시간을 11.9초에서 28ms로 단축했다.",
+      "desc": "Rust와 Kafka로 구축한 실시간 암호화폐 가격 스트리밍 API. Kafka 기반 수집/전달 분리와 SSE 브로드캐스트 채널 구조로 평균 지연시간 11.9초에서 28ms로 단축.",
       "stack": ["Rust", "Actix", "Kafka", "Docker"],
       "link": "https://github.com/N0067h/crypto-stream"
     }
@@ -1046,6 +1056,23 @@
     `).join('');
   }
 
+  function renderPerf(perf) {
+    const rows = perf.rows.map(r => `
+      <tr>
+        <td class="col-label">${e(r.label)}</td>
+        <td class="col-before">${e(r.before)}</td>
+        <td class="col-after">${e(r.after)}</td>
+      </tr>`).join('');
+    return `<table class="perf-table">
+      <thead><tr>
+        <th>항목</th>
+        <th class="col-before">BEFORE</th>
+        <th class="col-after">AFTER</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
   /* ── Main project template ── */
   function renderMP(p) {
     const links = (p.links||[]).filter(l=>l.url)
@@ -1070,7 +1097,7 @@
         </div>
         <div class="mp-body">
 
-          ${lbl('문제 정의')}
+          ${lbl('프로젝트 계기')}
           <ul class="problem-list">${li('',p.problem)}</ul>
 
           ${hr()}
@@ -1103,16 +1130,7 @@
 
           ${hr()}
           ${lbl('성능 개선')}
-          <div class="perf-grid">
-            <div class="perf-card">
-              <div class="perf-lbl before">BEFORE</div>
-              <div class="perf-val">${e(p.performance.before)}</div>
-            </div>
-            <div class="perf-card">
-              <div class="perf-lbl after">AFTER</div>
-              <div class="perf-val">${e(p.performance.after)}</div>
-            </div>
-          </div>
+          ${renderPerf(p.performance)}
 
           ${hr()}
           ${lbl('회고')}
