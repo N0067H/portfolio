@@ -1,1292 +1,1171 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>소프트웨어 개발자 류승엽</title>
+  <title>백엔드 개발자 류승엽</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg: #FFFFFF;
+      --accent: #2D3580;
+      --accent2: #C8520A;
+      --text: #1A1A1A;
+      --header-bg: #2D3580;
+      --divider: #D0D5E8;
+      --surface: rgba(45,53,128,0.05);
+      --surface-b: rgba(45,53,128,0.09);
+      --fs-xs: 12px;
+      --fs-sm: 13px;
+      --fs-base: 15px;
+      --fs-md: 18px;
+      --fs-lg: 22px;
+      --fs-xl: 26px;
+      --fs-2xl: 32px;
+      --fw-normal: 400;
+      --fw-medium: 500;
+      --fw-bold: 700;
+      --radius-sm: 4px;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --gap-xs: 4px;
+      --gap-sm: 8px;
+      --gap: 16px;
+      --gap-lg: 24px;
+      --gap-xl: 40px;
+      --gap-2xl: 64px;
+      --max-w: 880px;
+      --header-h: 56px;
+      --transition: 0s;
     }
 
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    ul { list-style: none; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== BASE ===== */
     body {
-      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-      font-size: 13.5px;
-      line-height: 1.7;
-      color: #1a1a1a;
-      background: #fff;
-      padding: 0;
-    }
-
-    .page {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 60px 60px;
-    }
-
-    /* ── 헤더 ── */
-    .header {
-      display: flex;
-      align-items: flex-start;
-      gap: 32px;
-      margin-bottom: 28px;
-    }
-
-    .header-photo {
-      width: 96px;
-      height: 96px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: #e5e5e5;
-    }
-
-    .header-info h1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 10px;
-    }
-
-    .header-meta {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: 13px;
-      color: #333;
-    }
-
-    .header-meta li strong {
-      display: inline-block;
-      width: 52px;
-      font-weight: 700;
-    }
-
-    .header-meta a {
-      color: #1a1a1a;
-      text-decoration: underline;
-    }
-
-    /* ── 한 줄 소개 ── */
-    .tagline {
-      border-left: 3.5px solid #1a1a1a;
-      padding: 8px 14px;
-      margin-bottom: 36px;
-      background: #f9f9f9;
-      font-size: 13px;
-      color: #222;
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: var(--fs-base);
       line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      transition: background var(--transition), color var(--transition);
+    }
+    code, .mono {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: 0.88em;
     }
 
-    /* ── 섹션 공통 ── */
-    .section {
-      margin-bottom: 40px;
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--gap-lg);
     }
+    .section-gap { margin-top: var(--gap-2xl); }
 
-    .section-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 16px;
+    /* ===== HEADER ===== */
+    #site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: var(--bg);
+      border-bottom: 1px solid var(--divider);
+      transition: background var(--transition);
+    }
+    .header-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--gap-lg);
+      height: 100%;
       display: flex;
       align-items: center;
-      gap: 8px;
-      border-bottom: 2px solid #1a1a1a;
-      padding-bottom: 6px;
+      justify-content: space-between;
     }
-
-    /* ── 기술 스택 ── */
-    .stack-box {
-      background: #f6f6f6;
-      border-radius: 8px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 10px 0;
-      align-items: start;
+    .site-title {
+      font-size: var(--fs-md);
+      font-weight: var(--fw-bold);
+      color: var(--text);
     }
-
-    .stack-label {
-      font-weight: 700;
-      font-size: 13px;
-      padding-top: 2px;
-      color: #111;
+    .site-title em {
+      color: var(--accent);
+      font-style: normal;
     }
-
-    .stack-items {
-      list-style: none;
+    .header-right {
       display: flex;
+      align-items: center;
+      gap: var(--gap-lg);
+    }
+    .main-nav { display: flex; gap: var(--gap-lg); }
+    .main-nav a {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+      color: var(--text);
+      opacity: 0.65;
+      transition: opacity var(--transition);
+    }
+    .main-nav a:hover { opacity: 1; text-decoration: none; }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--text);
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--header-h);
+      left: 0; right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--divider);
+      padding: var(--gap);
       flex-direction: column;
-      gap: 3px;
+      gap: var(--gap);
+      z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text);
+      font-size: var(--fs-base);
+      padding: var(--gap-sm) 0;
+      border-bottom: 1px solid var(--divider);
     }
 
-    .stack-items li {
-      font-size: 13px;
-      color: #222;
-      padding-left: 0;
+    /* ===== HERO ===== */
+    #hero { padding: 52px 0 var(--gap-xl); }
+    .hero-name {
+      font-size: var(--fs-2xl);
+      font-weight: var(--fw-bold);
+      line-height: 1.2;
+      margin-bottom: var(--gap-lg);
     }
-
-    .stack-items li::before {
-      content: '';
+    .hero-role {
+      font-size: var(--fs-lg);
+      color: var(--accent);
+      font-weight: var(--fw-medium);
+      margin-bottom: var(--gap-lg);
     }
-
-    /* ── 프로젝트 카드 ── */
-    .project {
-      margin-bottom: 48px;
-    }
-
-    .project-header {
-      background: #f3f3f3;
-      border-radius: 8px 8px 0 0;
-      padding: 18px 22px 14px;
-      margin-bottom: 0;
-    }
-
-    .project-header h3 {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-
-    .project-links {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 0;
-    }
-
-    .project-links a {
-      color: #333;
-      text-decoration: underline;
-      margin-right: 8px;
-    }
-
-    .project-body {
-      border: 1px solid #e8e8e8;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      padding: 18px 22px;
-    }
-
-    .project-summary {
-      font-size: 13px;
-      color: #222;
-      margin-bottom: 10px;
-    }
-
-    .highlight-box {
-      border-left: 3px solid #1a1a1a;
-      background: #f9f9f9;
-      padding: 8px 13px;
-      font-size: 13px;
-      margin-bottom: 14px;
-      color: #222;
-      line-height: 1.7;
-    }
-
-    .tech-tags {
+    .hero-contact {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 14px;
+      gap: 4px var(--gap-lg);
+      margin-bottom: var(--gap-lg);
+      font-size: var(--fs-sm);
+      opacity: 0.7;
+    }
+    .hero-contact a { color: inherit; }
+    .hero-tagline {
+      max-width: 720px;
+      line-height: 1.8;
+      opacity: 0.85;
+      word-break: keep-all;
     }
 
-    .tech-tag {
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      font-size: var(--fs-xl);
+      font-weight: var(--fw-bold);
+      padding-bottom: var(--gap-sm);
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+      margin-bottom: var(--gap-lg);
+    }
+
+    /* ===== ABOUT ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-xl);
+      align-items: start;
+    }
+    .bio-group { margin-bottom: var(--gap-lg); }
+    .bio-label {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: var(--gap-xs);
+    }
+    .bio-items { display: flex; flex-direction: column; gap: 3px; font-size: var(--fs-sm); }
+    .bio-main { display: flex; flex-direction: column; }
+    .bio-sub { font-size: var(--fs-xs); opacity: 0.55; margin-top: 1px; }
+    .skill-group { margin-bottom: var(--gap-lg); }
+    .skill-group-title {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: var(--gap-xs);
+    }
+    .badges { display: flex; flex-wrap: wrap; gap: var(--gap-xs); }
+    .badge {
+      background: var(--surface-b);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-sm);
+      padding: 2px 9px;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-medium);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    }
+
+    /* ===== MAIN PROJECT ===== */
+    .main-project {
+      margin-bottom: var(--gap-2xl);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-lg);
+    }
+    .mp-header {
+      background: var(--header-bg);
       color: #fff;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 3px;
-      letter-spacing: 0.3px;
-      background: #444;
+      padding: var(--gap-lg) var(--gap-xl);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      overflow: hidden;
     }
-
-    /* ── 기술별 색상 ── */
-    .tech-rust,
-    .tech-axum {
-      background: #CE422B;
+    .mp-header h3 {
+      font-size: var(--fs-xl);
+      font-weight: var(--fw-bold);
+      margin-bottom: 4px;
     }
-
-    .tech-actix {
-      background: #B03020;
-    }
-
-    .tech-go,
-    .tech-fiber {
-      background: #00ADD8;
-    }
-
-    .tech-java,
-    .tech-spring {
-      background: #6DB33F;
-    }
-
-    .tech-docker {
-      background: #2496ED;
-    }
-
-    .tech-kafka {
-      background: #231F20;
-    }
-
-    .tech-redis {
-      background: #DC382D;
-    }
-
-    .tech-mysql {
-      background: #4479A1;
-    }
-
-    .tech-terraform {
-      background: #7B42BC;
-    }
-
-    .tech-nginx {
-      background: #009639;
-    }
-
-    .tech-tailscale {
-      background: #242424;
-    }
-
-    /* AWS 계열 — 공통 오렌지 */
-    .tech-aws,
-    .tech-ec2,
-    .tech-s3,
-    .tech-cloudfront,
-    .tech-cloudwatch,
-    .tech-sns,
-    .tech-elasticache {
-      background: #FF9900;
-      color: #fff;
-    }
-
-    /* ── 역할 ── */
-    .role-group {
-      margin-bottom: 12px;
-    }
-
-    .role-group-title {
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 5px;
-      color: #111;
-    }
-
-    .role-list {
-      list-style: none;
-      padding-left: 0;
+    .mp-subtitle { font-size: var(--fs-base); opacity: 0.85; margin-bottom: 6px; }
+    .mp-period { font-size: var(--fs-xs); opacity: 0.65; margin-bottom: var(--gap-sm); }
+    .mp-metrics {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      flex-wrap: wrap;
+      gap: var(--gap-lg);
+      background: rgba(0,0,0,0.22);
+      margin: var(--gap-sm) calc(-1 * var(--gap-xl)) calc(-1 * var(--gap-lg));
+      padding: var(--gap) var(--gap-xl);
+    }
+    .mp-metric { text-align: left; }
+    .mp-metric-value {
+      font-size: var(--fs-lg);
+      font-weight: var(--fw-bold);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      color: #fff;
+      display: block;
+    }
+    .mp-metric-label { font-size: var(--fs-xs); opacity: 0.7; }
+    .mp-stack { display: flex; flex-wrap: wrap; gap: var(--gap-xs); margin-bottom: var(--gap-sm); }
+    .mp-stack-badge {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: var(--fs-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .mp-links { margin-top: 4px; }
+    .mp-links a {
+      color: rgba(255,255,255,0.75);
+      font-size: var(--fs-sm);
+      text-decoration: underline;
+      margin-right: var(--gap-sm);
+    }
+    .mp-body { padding: var(--gap-xl); }
+    .mp-divider { height: 1px; background: var(--divider); margin: var(--gap-xl) 0; }
+    .mp-label {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      padding-left: var(--gap-sm);
+      margin-bottom: var(--gap);
     }
 
-    .role-list li {
-      padding-left: 14px;
+    /* Lists */
+    .problem-list li,
+    .tech-reason-list li,
+    .features-list li,
+    .impl-list li,
+    .future-list li {
+      padding-left: var(--gap-lg);
       position: relative;
-      font-size: 13px;
-      color: #222;
-      line-height: 1.65;
+      margin-bottom: var(--gap-sm);
+      line-height: 1.75;
     }
+    .problem-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+    .tech-reason-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+    .features-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+    .future-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+    .impl-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent2); font-size: 0.75em; top: 0.25em; }
 
-    .role-list li::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-      color: #555;
+    /* Arch placeholder */
+    .arch-img {
+      width: 750px;
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      display: block;
     }
-
-    /* ── 서브섹션 ── */
-    .subsection-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin: 16px 0 8px;
+    .data-model-img {
+      max-width: 720px;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      display: block;
+      margin: 0 auto;
+    }
+    .arch-placeholder {
+      width: 100%;
+      aspect-ratio: 750 / 506;
+      background: var(--surface);
+      border: 2px dashed var(--divider);
+      border-radius: var(--radius);
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: var(--fs-sm);
+      opacity: 0.5;
+      letter-spacing: 0.04em;
     }
 
-    /* ── 이미지 박스 ── */
-    .arch-placeholder {
-      background: #f2f2f2;
-      border-radius: 6px;
-      padding: 20px;
-      text-align: center;
-      color: #888;
-      font-size: 12px;
-      margin: 10px 0 16px;
-      border: 1px dashed #ccc;
-    }
-
-    /* ── 번호 목록 ── */
-    .numbered-section {
-      margin-bottom: 10px;
-    }
-
-    .numbered-section h4 {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 5px;
-      color: #111;
-    }
-
-    /* ── 개선 포인트 (성과 테이블) ── */
-    .result-box {
-      background: #f6f6f6;
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-top: 14px;
-    }
-
-    .result-label {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .result-summary {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 10px;
-    }
-
-    table {
+    /* Stack table */
+    .stack-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12.5px;
-      margin-bottom: 8px;
+      font-size: var(--fs-sm);
     }
-
-    thead tr {
-      background: #e8e8e8;
-    }
-
-    th,
-    td {
-      padding: 6px 10px;
+    .stack-table th {
       text-align: left;
-      border: 1px solid #ddd;
+      padding: var(--gap-sm) var(--gap);
+      background: var(--surface);
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--divider);
+    }
+    .stack-table td {
+      padding: var(--gap-sm) var(--gap);
+      border-bottom: 1px solid var(--divider);
+      vertical-align: top;
+    }
+    .stack-table td:first-child {
+      font-weight: var(--fw-bold);
+      width: 110px;
+      color: var(--accent);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+    }
+    .stack-table code {
+      background: var(--surface);
+      padding: 1px 6px;
+      border-radius: 3px;
     }
 
-    th {
-      font-weight: 700;
-      color: #111;
+    /* Data model */
+    .data-model-block {
+      background: var(--surface);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      padding: var(--gap);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: var(--fs-sm);
+      white-space: pre-wrap;
+      line-height: 1.8;
     }
 
-    td.highlight {
-      color: #c0392b;
-      font-weight: 700;
+    /* Troubleshooting */
+    .ts-block {
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: var(--gap);
     }
+    .ts-header {
+      background: var(--surface);
+      padding: var(--gap-sm) var(--gap);
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-bold);
+      border-bottom: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      gap: var(--gap-sm);
+    }
+    .ts-num {
+      background: var(--accent2);
+      color: #fff;
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 3px;
+      font-weight: var(--fw-bold);
+      flex-shrink: 0;
+    }
+    .ts-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .ts-cell {
+      padding: var(--gap) var(--gap-lg);
+      border-right: 1px solid var(--divider);
+    }
+    .ts-cell:last-child { border-right: none; }
+    .ts-cell-full {
+      padding: var(--gap) var(--gap-lg);
+      border-top: 1px solid var(--divider);
+    }
+    .ts-lbl {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: var(--gap-sm);
+    }
+    .ts-val { font-size: var(--fs-base); line-height: 1.75; }
 
-    .result-note {
-      font-size: 12px;
-      color: #555;
-      margin-top: 6px;
+    /* Performance */
+    .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+    .perf-card {
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      padding: var(--gap-lg);
+    }
+    .perf-lbl {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--gap-sm);
+    }
+    .perf-lbl.before { color: #888; }
+    .perf-lbl.after { color: var(--accent); font-weight: var(--fw-normal); }
+    .perf-val {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-bold);
+      white-space: pre-line;
       line-height: 1.6;
     }
 
-    /* ── 구분선 ── */
-    hr {
-      border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 32px 0;
+    /* Retrospective */
+    .retro-block {
+      background: var(--surface);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: var(--gap) var(--gap-lg);
+      font-size: var(--fs-base);
+      line-height: 1.85;
     }
 
-    /* ── 토이 프로젝트 ── */
-    .toy-list {
-      list-style: none;
+    /* ===== SMALL PROJECTS ===== */
+    .small-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap);
+    }
+    .small-card {
+      border: 1px solid var(--divider);
+      border-radius: var(--radius);
+      padding: var(--gap-lg);
+      background: var(--surface);
+      transition: box-shadow var(--transition);
+    }
+    .small-card:hover { box-shadow: none; }
+    .small-card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .small-card-title { font-size: var(--fs-md); font-weight: var(--fw-bold); }
+    .small-card-link { font-size: var(--fs-sm); opacity: 0.55; }
+    .small-card-period { font-size: var(--fs-xs); opacity: 0.55; margin-bottom: var(--gap-sm); }
+    .small-card-desc { font-size: var(--fs-sm); line-height: 1.65; margin-bottom: var(--gap-sm); }
+
+    /* ===== ACTIVITIES ===== */
+    .activity-group { margin-bottom: var(--gap-xl); }
+    .activity-year {
+      font-size: var(--fs-lg);
+      font-weight: var(--fw-bold);
+      color: var(--accent);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      margin-bottom: var(--gap-sm);
+    }
+    .activity-list {
+      border-left: 2px solid var(--divider);
+      padding-left: var(--gap-lg);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: var(--gap-sm);
     }
-
-    .toy-list>li {
-      padding-left: 0;
-      font-size: 13px;
-    }
-
-    .toy-list>li strong {
-      font-weight: 700;
-    }
-
-    .toy-sub {
-      list-style: none;
-      padding-left: 16px;
-      margin-top: 3px;
-    }
-
-    .toy-sub li {
-      position: relative;
-      padding-left: 12px;
-      color: #444;
-      font-size: 12.5px;
-    }
-
-    .toy-sub li::before {
-      content: '○';
-      position: absolute;
-      left: 0;
-      font-size: 10px;
-      top: 2px;
-      color: #888;
-    }
-
-    /* ── 오픈소스 ── */
-    .os-box {
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-    }
-
-    .os-title {
-      font-weight: 700;
-      font-size: 13.5px;
-      margin-bottom: 6px;
-    }
-
-    .os-title a {
-      color: #1a1a1a;
-      text-decoration: underline;
-    }
-
-    .os-list {
-      list-style: none;
-      padding-left: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .os-list li {
-      padding-left: 14px;
-      position: relative;
-      font-size: 13px;
-      color: #222;
-    }
-
-    .os-list li::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-      color: #555;
-    }
-
-    /* ── 커리어 타임라인 ── */
-    .career-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .career-list li {
-      display: flex;
-      gap: 16px;
-      font-size: 13px;
-      padding: 5px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .career-date {
-      font-weight: 700;
-      color: #c0392b;
+    .activity-item { display: flex; gap: var(--gap); align-items: baseline; }
+    .activity-date {
+      font-size: var(--fs-xs);
+      color: var(--accent2);
+      font-weight: var(--fw-bold);
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      min-width: 60px;
       flex-shrink: 0;
-      width: 54px;
-      font-size: 12px;
-      padding-top: 1px;
+    }
+    .activity-text { font-size: var(--fs-sm); line-height: 1.6; }
+
+    /* ===== FOOTER ===== */
+    #footer {
+      margin-top: var(--gap-2xl);
+      border-top: 1px solid var(--divider);
+      padding: var(--gap-xl) 0;
+      text-align: center;
+      font-size: var(--fs-xs);
+      opacity: 0.45;
     }
 
-    .career-desc {
-      color: #222;
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      :root {
+        --fs-2xl: 26px;
+        --fs-xl: 20px;
+        --gap-2xl: 48px;
+        --gap-xl: 28px;
+      }
+      .main-nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .about-grid { grid-template-columns: 1fr; }
+      .ts-body { grid-template-columns: 1fr; }
+      .ts-cell { border-right: none; border-bottom: 1px solid var(--divider); }
+      .ts-cell:last-child { border-bottom: none; }
+      .perf-grid { grid-template-columns: 1fr; }
+      .small-grid { grid-template-columns: 1fr; }
+      .mp-header { padding: var(--gap) var(--gap-lg); }
+      .mp-body { padding: var(--gap-lg); }
+    }
+    @media (min-width: 1024px) {
+      .small-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    /* ── 마지막 인용 ── */
-    .closing {
-      border-left: 3.5px solid #1a1a1a;
-      padding: 10px 14px;
-      margin-top: 28px;
-      background: #f9f9f9;
-      font-size: 13.5px;
-      color: #222;
-      line-height: 1.8;
-      font-style: normal;
-    }
-
-    /* ── 인쇄 설정 ── */
+    /* ===== PRINT ===== */
     @media print {
+      .dark-toggle, .mobile-menu, .mobile-menu-btn, #site-header { display: none !important; }
+      a { text-decoration: underline !important; color: var(--accent) !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; color: var(--text) !important; font-size: 11px; }
+      #site-header { position: static; }
+      .main-project { page-break-inside: avoid; break-inside: avoid; }
+      .ts-block, .perf-grid, .small-card { page-break-inside: avoid; break-inside: avoid; }
+      .section-gap { margin-top: 36px; }
+      .about-grid { grid-template-columns: 1fr 1fr !important; }
+      .perf-grid { grid-template-columns: 1fr 1fr !important; }
+      .perf-card { border: 1px solid #ccc !important; }
       @page {
         size: A4;
-        margin: 18mm 16mm 18mm 16mm;
-      }
-
-      body {
-        padding: 0;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .page {
-        padding: 0;
-        max-width: 100%;
-      }
-
-      /* 잘리면 안 되는 단위들 */
-      .project-header,
-      .tech-tags,
-      .role-group,
-      .numbered-section,
-      .result-box,
-      table,
-      .os-box,
-      .closing {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
-      /* 섹션 제목 뒤에서 페이지 안 끊기 */
-      .section-title,
-      .subsection-title,
-      .role-group-title,
-      .numbered-section h4 {
-        break-after: avoid;
-        page-break-after: avoid;
-      }
-
-      /* 프로젝트 카드 헤더와 바디가 서로 떨어지지 않도록 */
-      .project-header {
-        break-after: avoid;
-        page-break-after: avoid;
-      }
-
-      .project-body {
-        break-before: avoid;
-        page-break-before: avoid;
-      }
-
-      /* 각 프로젝트는 새 페이지에서 시작 가능하되, 내부에서 끊기지 않음 */
-      .project {
-        break-inside: auto;
-        page-break-inside: auto;
-      }
-
-      /* hr 전후 여백 축소 */
-      hr {
-        margin: 16px 0;
-      }
-
-      /* 배경색·색상이 인쇄에서 누락되지 않도록 */
-      .tech-tag,
-      .result-box,
-      .project-header,
-      .stack-box,
-      .highlight-box,
-      .tagline,
-      .os-box,
-      .closing {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      /* 링크 밑줄만 유지, URL 자동 표기 제거 */
-      a::after {
-        content: none !important;
+        margin: 10mm 10mm 16mm 10mm;
+        @bottom-center {
+          content: counter(page) " / " counter(pages);
+          font-size: 9px;
+          color: #888;
+        }
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="page">
 
-    <!-- ════════════════════════════════ 헤더 ════════════════════════════════ -->
-    <div class="header">
-      <div class="header-info">
-        <h1>소프트웨어 개발자 류승엽</h1>
-        <ul class="header-meta">
-          <li><strong>Edu</strong> 경북소프트웨어마이스터고 3학년 재학</li>
-          <li><strong>TEL</strong> 010-8034-0689</li>
-          <li><strong>Email</strong> <a href="mailto:n006h3417h@gmail.com">n006h3417h@gmail.com</a></li>
-          <li><strong>GitHub</strong> <a href="https://github.com/N0067H" target="_blank">@N0067H</a></li>
-        </ul>
-      </div>
+<!-- ===== SECTION: header ===== -->
+<header id="site-header">
+  <div class="header-inner">
+    <div class="site-title">류승엽</div>
+    <div class="header-right">
+      <nav class="main-nav">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#activities">Activities</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mob-btn" aria-label="메뉴">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect y="3" width="20" height="2" rx="1" fill="currentColor"/>
+          <rect y="9" width="20" height="2" rx="1" fill="currentColor"/>
+          <rect y="15" width="20" height="2" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
     </div>
+  </div>
+</header>
 
-    <div class="tagline">
-      <strong>Rust, Go, Java 기반 프로그래밍 역량을 갖춘 신입 소프트웨어 개발자입니다.</strong><br>
-      각 기술의 특성과 트레이드오프를 이해하고, 문제 상황에 맞는 기술을 선택합니다.<br>
-      성능 최적화와 안정성 개선에 강점이 있으며, 오픈소스 기여와 대회 경험으로 개발 역량을 확장해왔습니다.
-    </div>
+<div class="mobile-menu" id="mob-menu">
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#projects" onclick="closeMob()">Projects</a>
+  <a href="#activities" onclick="closeMob()">Activities</a>
+</div>
 
-    <!-- ════════════════════════════════ 기술 스택 ════════════════════════════════ -->
-    <div class="section">
-      <div class="section-title">💻 기술 스택</div>
-      <div class="stack-box">
-        <span class="stack-label">Backend</span>
-        <ul class="stack-items">
-          <li>Java (Spring Boot) — 대규모 서비스 또는 장기 유지보수가 요구되는 환경</li>
-          <li>Go (Fiber) — 빠른 개발 속도와 동시성이 필요한 API 서버</li>
-          <li>Rust (Axum) — 메모리 안정성과 예측 가능한 레이턴시가 요구되는 고성능 서버</li>
-        </ul>
+<main>
+  <div class="container">
 
-        <span class="stack-label">Infra</span>
-        <ul class="stack-items">
-          <li>AWS</li>
-          <li>Docker, Terraform, Nginx</li>
-        </ul>
+    <!-- ===== SECTION: hero ===== -->
+    <section id="hero"><div id="hero-root"></div></section>
 
-        <span class="stack-label">Database</span>
-        <ul class="stack-items">
-          <li>MySQL, PostgreSQL, Redis</li>
-        </ul>
+    <!-- ===== SECTION: about ===== -->
+    <section id="about" class="section-gap">
+      <h2 class="section-title">About</h2>
+      <div id="about-root"></div>
+    </section>
 
-        <span class="stack-label">Queue</span>
-        <ul class="stack-items">
-          <li>Kafka</li>
-        </ul>
-      </div>
-    </div>
+    <!-- ===== SECTION: main-projects ===== -->
+    <section id="projects" class="section-gap">
+      <h2 class="section-title">Main Projects</h2>
+      <div id="mp-root"></div>
+    </section>
 
-    <!-- ════════════════════════════════ 프로젝트 ════════════════════════════════ -->
-    <div class="section">
-      <div class="section-title">📁 프로젝트</div>
+    <!-- ===== SECTION: small-projects ===== -->
+    <section id="small-projects" class="section-gap">
+      <h2 class="section-title">More Projects</h2>
+      <div id="sp-root"></div>
+    </section>
 
-      <!-- ─────── Crypto Stream ─────── -->
-      <div class="project">
-        <div class="project-header">
-          <h3>Crypto Stream <span style="font-weight:400;font-size:14px;">(개인, 2026.05 ~ 2026.06)</span></h3>
-          <div class="project-links"><a href="https://github.com/N0067h/crypto-stream" target="_blank">GitHub</a></div>
-        </div>
-        <div class="project-body">
-          <p class="project-summary">Rust와 Kafka로 구축된 실시간 암호화폐 가격 스트리밍 API</p>
-          <div class="highlight-box">
-            Kafka 기반 서비스 분리와 SSE 팬아웃 구조 개선으로 평균 지연시간을 <strong>11.9초 → 28ms</strong>로 단축하고,
-            장애 발생 시 <strong>4초 내 자동 복구</strong>되는 구조를 구축했습니다.
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag tech-rust">Rust</span>
-            <span class="tech-tag tech-actix">Actix</span>
-            <span class="tech-tag tech-docker">Docker</span>
-            <span class="tech-tag tech-kafka">Kafka</span>
-          </div>
-
-          <div class="role-group">
-            <div class="role-group-title">백엔드 (Rust + Actix)</div>
-            <ul class="role-list">
-              <li>서비스 간 Kafka 토픽을 유일한 통신 수단으로 강제 — Binance 장애가 SSE 클라이언트까지 전파되지 않는 장애 격리 구조 설계</li>
-              <li>symbol 파티션 키로 동일 코인 이벤트를 단일 파티션에 수렴 — 분산 환경에서 체결 순서 보장</li>
-              <li>sliding window 기반 급등락 감지를 별도 alerting 서비스로 분리 — 감지 로직이 스트리밍 레이턴시에 영향을 주지 않는 구조</li>
-              <li>모든 서비스를 Docker Compose로 통합해 Kafka, topic 초기화, Rust 서비스 3개 빌드 및 실행 단순화</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">🔍 문제 인식</div>
-
-          <div class="numbered-section">
-            <h4>1. Binance tick 데이터를 직접 SSE로 연결하면 Binance 장애 시 클라이언트도 끊김</h4>
-            <ul class="role-list">
-              <li>Binance WebSocket 수신과 SSE 응답이 직접 연결되면, Binance 연결 지연·재연결·장애가 그대로 클라이언트 응답 중단으로 전파</li>
-              <li>수집 로직과 클라이언트 전달 경로가 결합되어 collector 장애 시 SSE 스트리밍 안정성도 함께 흔들림</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. 다수 SSE 클라이언트에 tick을 동시 전달할 때 브로드캐스트 구조 없이는 N번 복사 발생</h4>
-            <ul class="role-list">
-              <li>클라이언트마다 개별 consumer나 처리 루프를 두면 동일 tick을 클라이언트 수만큼 반복 역직렬화·전송</li>
-              <li>SSE 클라이언트가 늘어날수록 tick 처리 비용이 클라이언트 수에 비례해 증가</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>3. 급등락 감지 로직이 스트리밍 경로에 포함되면 레이턴시 오염</h4>
-            <ul class="role-list">
-              <li>tick 스트리밍 경로 안에서 100틱 윈도우 계산과 급등락 판단을 함께 수행하면 /ticks 응답 latency에 탐지 비용이 직접 반영</li>
-              <li>alert 판단이 느려지거나 복잡해질수록 실시간 tick 전달 성능도 함께 저하</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">⚙️ 해결 과정</div>
-
-          <div class="numbered-section">
-            <h4>1. Kafka 기반 수집/전달 경로 분리</h4>
-            <ul class="role-list">
-              <li>collector는 Binance tick을 Kafka price-tick 토픽에 publish하는 역할만 담당</li>
-              <li>processor는 Kafka에서 tick을 consume해 SSE로 전달하므로, 수집 장애와 클라이언트 fanout 경로를 분리</li>
-              <li>collector 장애 시에도 processor/SSE 서버는 유지되며, Compose restart 정책으로 collector를 자동 복구</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. Broadcast channel 기반 fanout</h4>
-            <ul class="role-list">
-              <li>processor가 Kafka tick을 한 번만 consume한 뒤 내부 broadcast 채널로 여러 SSE 클라이언트에 전달</li>
-              <li>동일 tick의 중복 소비·중복 처리 비용을 줄이고, 50개 클라이언트 동시 연결에서도 단일 fanout 경로로 처리</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>3. Alerting 서비스 비동기 분리</h4>
-            <ul class="role-list">
-              <li>alerting-service를 별도 Kafka consumer로 분리해 price-tick을 독립적으로 consume</li>
-              <li>급등락 감지 결과만 price-alert 토픽에 publish하고, processor는 /ticks와 /alerts를 각각 SSE로 fanout</li>
-              <li>tick 전달 경로는 단순 스트리밍에 집중하고, 탐지 로직은 별도 파이프라인에서 비동기 처리</li>
-            </ul>
-          </div>
-
-          <div class="result-box">
-            <div class="subsection-title" style="margin-top:0;">🎯 개선 포인트</div>
-            <p class="result-label">Rust bench-tools 기준 — SSE 50 clients/30s, throughput 60s, latency 1,000 samples,
-              collector kill 복구 시간 측정</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Before</th>
-                  <th>After</th>
-                  <th>Improvement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>SSE TPS (50 clients)</td>
-                  <td>3,161.61 events/s</td>
-                  <td class="highlight">4,812.09 events/s</td>
-                  <td>+52.2%</td>
-                </tr>
-                <tr>
-                  <td>Tick TPS</td>
-                  <td>26.27 ticks/s</td>
-                  <td class="highlight">107.82 ticks/s</td>
-                  <td>+310.5%</td>
-                </tr>
-                <tr>
-                  <td>Avg Latency</td>
-                  <td>11,923.25ms</td>
-                  <td class="highlight">28.89ms</td>
-                  <td>-99.8%</td>
-                </tr>
-                <tr>
-                  <td>P95 Latency</td>
-                  <td>15,320ms</td>
-                  <td class="highlight">1,333ms</td>
-                  <td>-91.3%</td>
-                </tr>
-                <tr>
-                  <td>Recovery Time</td>
-                  <td>—</td>
-                  <td class="highlight">4,186ms</td>
-                  <td>—</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="result-note">단순 성능 최적화보다 장애 격리와 순서 보장을 우선한 설계로 운영 안정성을 확보했습니다.</p>
-          </div>
-        </div>
-      </div>
-
-      <hr>
-
-      <!-- ─────── Pulse ─────── -->
-      <div class="project">
-        <div class="project-header">
-          <h3>Pulse <span style="font-weight:400;font-size:14px;">(개인, 2026.02 ~ 2026.05)</span></h3>
-          <div class="project-links"><a href="https://youtu.be/f4yI23oUCqU" target="_blank">데모 영상</a> | <a
-              href="https://github.com/n0067h/pulse-backend" target="_blank">GitHub</a></div>
-        </div>
-        <div class="project-body">
-          <p class="project-summary">등록된 API 엔드포인트에 주기적으로 HTTP 요청을 보내고 결과를 기록하는 헬스체크 서비스</p>
-          <div class="highlight-box">
-            DynamoDB 접근 패턴과 스케줄링 구조를 재설계하여 읽기 비용을 <strong>API 개수와 무관한 구조</strong>로 전환하고,
-            DB 쓰기 횟수를 최대 <strong>33% 감소</strong>시켰습니다.
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag tech-java">Java</span>
-            <span class="tech-tag tech-spring">Spring</span>
-            <span class="tech-tag tech-ec2">EC2</span>
-            <span class="tech-tag tech-aws">DynamoDB</span>
-            <span class="tech-tag tech-sns">SNS</span>
-            <span class="tech-tag tech-s3">S3</span>
-            <span class="tech-tag tech-cloudfront">CloudFront</span>
-            <span class="tech-tag tech-cloudwatch">CloudWatch</span>
-            <span class="tech-tag tech-terraform">Terraform</span>
-          </div>
-
-          <div class="role-group">
-            <div class="role-group-title">백엔드 (Spring Boot + AWS)</div>
-            <ul class="role-list">
-              <li>타임아웃·재시도를 포함한 논블로킹 HTTP 헬스체크 스케줄러 설계</li>
-              <li>DynamoDB 기반 모니터링 API 및 체크 이력 도메인 설계</li>
-              <li>연속 실패 임계값 초과 시 SNS 이메일 알림, 쿨다운으로 알림 중복 발송 방지</li>
-            </ul>
-          </div>
-
-          <div class="role-group">
-            <div class="role-group-title">인프라 (Terraform + AWS)</div>
-            <ul class="role-list">
-              <li>Terraform으로 전체 인프라 프로비저닝 자동화 — 수동 설정 오류 제거 및 환경 재현성 확보</li>
-              <li>OAC(SigV4) 기반으로 S3 퍼블릭 접근 차단, CloudFront에서만 버킷 접근 허용</li>
-              <li>단일 CloudFront 배포에서 /apis/* → EC2(캐싱 없음), 정적 파일 → S3(캐싱) 경로 분리</li>
-              <li>S3 sync + CloudFront invalidation 자동화 배포 스크립트 구성</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">🔍 문제 인식</div>
-
-          <div class="numbered-section">
-            <h4>1. 모니터링 주기마다 DynamoDB 전체 스캔</h4>
-            <ul class="role-list">
-              <li>매 주기마다 테이블 전체를 읽어 메모리에 올린 뒤 애플리케이션에서 필터링</li>
-              <li>실제 체크 대상이 소수여도 읽기 비용은 테이블 전체 크기에 비례해 RCU를 불필요하게 소진</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. 체크 1회에 DB 쓰기가 2~3회로 분산 발생</h4>
-            <ul class="role-list">
-              <li>체크 결과 저장, 연속 실패 횟수 갱신, 다음 실행 시각 갱신이 각각 별도 네트워크 호출로 실행</li>
-              <li>API 50개 기준 한 사이클에 최대 150회 쓰기가 동일 파티션에 집중되어 핫 파티션 유발</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>3. 이력 전체를 읽어온 뒤 애플리케이션에서 정렬 후 제한 적용</h4>
-            <ul class="role-list">
-              <li>체크 이력 조회 시 전체 결과를 DynamoDB에서 읽어온 뒤 정렬·제한을 애플리케이션에서 처리</li>
-              <li>TTL 30일 기준 최대 43,200개를 전량 읽는 구조로, 이력이 쌓일수록 응답 지연 증가</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>4. 단일 필드 갱신을 위한 불필요한 Read-then-Write</h4>
-            <ul class="role-list">
-              <li>알림 발송 시각 갱신 시 전체 아이템을 먼저 읽고 수정 후 다시 쓰는 방식으로 네트워크 호출 2회 발생</li>
-              <li>동시 수정 경합 시 오래된 스냅샷이 최신 값을 덮어쓰는 일관성 문제 발생</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>5. 모든 API HTTP 요청이 동시에 시작, 블로킹 작업이 I/O 스레드를 점유</h4>
-            <ul class="role-list">
-              <li>주기적 스케줄링 방식에서 전체 API 요청이 한 번에 시작되어 커넥션 풀 한도 초과 위험</li>
-              <li>HTTP 응답 후 실행되는 DB 저장·알림 등 블로킹 작업이 I/O 처리 스레드를 점유해 다른 요청 처리 지연</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">⚙️ 해결 과정</div>
-
-          <div class="numbered-section">
-            <h4>1. 주기적 전체 Scan 제거, API별 독립 스케줄링 도입</h4>
-            <ul class="role-list">
-              <li>앱 시작 시 1회만 전체 조회 후 각 API를 인메모리에서 독립적으로 스케줄링</li>
-              <li>체크 완료 후 자신의 인터벌 기준으로만 다음 실행을 재등록, 이후 추가 DB 조회 없음</li>
-              <li>CRUD 발생 시 DB 저장과 동시에 인메모리 스케줄도 즉시 반영</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. 다중 DB 쓰기를 단일 호출로 병합</h4>
-            <ul class="role-list">
-              <li>체크 후 갱신 필드를 인메모리에서 먼저 병합 후 DB 저장 단일 호출 — 분산 쓰기를 1회로 통합</li>
-              <li>다음 실행 스케줄 등록도 인메모리 상태를 참조하므로 추가 DB 조회 불필요</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>3. 정렬, 제한을 DB Query 단계로 이관</h4>
-            <ul class="role-list">
-              <li>소트키가 ISO 8601 형식이라 사전순 = 시간순이 보장되는 특성을 활용</li>
-              <li>내림차순 정렬과 조회 건수 제한을 DynamoDB Query 단계에서 처리, 애플리케이션의 전체 로드 후 정렬 방식 제거</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>4. 알림 상태 갱신을 기존 저장 호출에 통합, Read-then-Write 제거</h4>
-            <ul class="role-list">
-              <li>알림 발송 시각을 인메모리 상태에 반영 후 기존 저장 호출에 통합</li>
-              <li>전용 갱신 메서드 삭제로 별도 DB 호출 0회 추가, 스냅샷 덮어쓰기 문제 구조적으로 제거</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>5. 블로킹 작업을 I/O 분리</h4>
-            <ul class="role-list">
-              <li>API별 독립 스케줄링으로 동시 요청 폭주 방지</li>
-              <li>블로킹 작업을 전용 스레드 풀로 분리해 I/O 스레드 점유 제거 — 응답 처리와 후처리 독립 확장</li>
-            </ul>
-          </div>
-
-          <div class="result-box">
-            <div class="subsection-title" style="margin-top:0;">🎯 개선 포인트</div>
-            <p class="result-summary">O(n) Scan → O(1) per check 수가 늘어도 읽기 비용이 증가하지 않음</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Before</th>
-                  <th>After</th>
-                  <th>Improvement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>DB 쓰기 / 체크 1회</td>
-                  <td>2회</td>
-                  <td class="highlight">1회</td>
-                  <td>-50%</td    </tr>
-                <tr>
-                  <td>한 사이클 최대 쓰기 (API 50개)</td>
-                  <td>150회</td>
-                  <td class="highlight">100회</td>
-                  <td>-33%</td>
-                </tr>
-                <tr>
-                  <td>이력 조회 행 수</td>
-                  <td>최대 43,200개</td>
-                  <td class="highlight">요청 수만큼</td>
-                  <td>-99.9%</td>
-                </tr>
-                <tr>
-                  <td림 경로 추가 DB 호출</td>
-                  <td>2회</td>
-                  <td class="highlight">0회</td>
-                  <td>기존 저장에 흡수</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="result-note">비용 절감보다 시스템 규모가 커져도 같은 방식으로 동작하는 구조를 만드는 데 집중했습니다.</p>
-          </div>
-        </div>
-      </div>
-
-      <hr>
-
-      <!-- ─────── GitRank ─────->
-      <div class="project">
-        <div class="project-header">
-          <h3>GitRank <span style="font-weight:400;font-size:14px;">(개인, 2025.06 ~ 2025.07)</span></h3>
-          <div class="project-links"><a href="https://youtu.be/KHptvPMkjfo" target="_blank">데모 영상</a> | <a
-              href="https://github.com/n0067h/gitrank" target="_blank">GitHub</a></div>
-        </div>
-        <div class="project-body">
-          <p class="project-summary">GitHub Organization 내 멤버 랭킹을 조í         <div class="highlight-box">
-            외부 API 의존성을 요청 경로에서 제거하여 평균 응답 시간을 <strong>40초 → 1.65ms</strong>로 단축하고,
-            GitHub Rate Limit 영향을 받지 않는 구조를 구축했습니다.
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag tech-go">Go</span>
-            <span class="tech-tag tech-fiber">Fiber</span>
-            <span class="tech-tag tech-redis">Redis</span>
-          </div>
-
-      ss="role-group">
-            <div class="role-group-title">백엔드 (Go + Fiber)</div>
-            <ul class="role-list">
-              <li>외부 API 응답 지연을 요청 경로에서 격리하기 위해 API 서버와 Worker를 이중 프로세스로 분리 설계</li>
-              <li>GitHub GraphQL API로 조직 멤버 기여도 수집 — REST 대비 필요한 필드만 선택적으로 조회</li>
-              <li>gRPC 통신 도입 후 오버엔지니어링으로 판단하여 Redis Pub/Sub으로  단순화)</li>
-              <li>Redis 기반 SWR 캐싱 전략 적용 — 캐시 히트 시 즉시 응답 후 백그라운드 갱신, 분산 락으로 중복 갱신 요청 방지</li>
-              <li>별도 엔드포인트 없이 기존 Redis 연결로 Worker 생존 여부 확인</li>
-              <li>Worker Redis 재연결 버그 수정 — 점진적 백오프·타임아웃 컨텍스트 적용으로 무한 루프 및 리소스 누수 방지</li>
-            </ul>
-          </div>
-
-          <div clastion-title">🔍 문제 인식</div>
-
-          <div class="numbered-section">
-            <h4>1. 외부 API 호출이 요청 처리 경로에 직접 포함</h4>
-            <ul class="role-list">
-              <li>사용자 요청마다 GitHub GraphQL API를 직접 호출해 조직 멤버 기여도 데이터를 수집</li>
-              <li>외부 API 응답 지연이 그대로 사용자 응답 시간에 반영, 평균 응답 시간 수십 초</li>
-              <li>GitHub API rate limit 초과 시 서비ì´가 응답 불가 상태로 전환</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">⚙️ 해결 과정</div>
-
-          <div class="numbered-section">
-            <h4>1. 요청 경로에서 외부 API 호출 제거</h4>
-            <ul class="role-list">
-              <li>요청 경로에서 GitHub API 직접 호출 제거 — 사전 수집 캐시 데이터만 반환하도록 구조 전환</li>
-              <li>응답 지연의 근본 원인인 외부 의존성을 요ì            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. 데이터 수집과 요청 처리를 독립적인 워커 구조로 분리</h4>
-            <ul class="role-list">
-              <li>별도 워커 프로세스가 주기적으로 GitHub API를 호출해 데이터를 수집하고 Redis에 저장</li>
-              <li>수집과 서빙의 책임을 분리해 장애 격리 구조 확보</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section"<h4>3. SWR(Stale-While-Revalidate) 전략으로 응답 지연과 데이터 최신성 동시 해결</h4>
-            <ul class="role-list">
-              <li>캐시 만료 시에도 즉시 응답 후 백그라운드 갱신 — 응답 지연 없이 데이터 최신성 동시 확보</li>
-              <li>동시 다중 갱신 요청이 발생하면 분산 락으로 결합해 중복 수집 방지</li>
-            </ul>
-          </div>
-
-          <div class="result-box">
-            <div class="subsection-titleyle="margin-top:0;">🎯 개선 포인트</div>
-            <p class="result-note" style="margin-bottom:8px;">캐시를 추가한 것이 아니라, 외부 의존성을 시스템 경계 밖으로 밀어낸 구조 개선 사례입니다.</p>
-            <p class="result-label">k6 부하 테스트 기준 — Cached: 500 VU / 4m 30s, No Cache: 5 VU / GitHub rate limit 제약</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Cached</th>
-        <th>No Cache</th>
-                  <th>Improvement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Avg Latency</td>
-                  <td class="highlight">1.65ms</td>
-                  <td>40.09s</td>
-                  <td>seconds → milliseconds</td>
-                </tr>
-                <tr>
-                  <td>P95 Latency</td>
-                  <td class="highlight">4.39ms</td>
-                  <td>43.33s</td>
-                 td>seconds → milliseconds</td>
-                </tr>
-                <tr>
-                  <td>Throughput</td>
-                  <td class="highlight">5,740 req/s</td>
-                  <td>— ¹</td>
-                  <td>—</td>
-                </tr>
-                <tr>
-                  <td>Total Requests</td>
-                  <td class="highlight">1,549,907</td>
-                  <td>8</td>
-                  <td>—</td>
-                </tr>
-              </tbody>
-            </table>
-          s="result-note">
-              캐시 적중 시 외부 API 호출 없이 응답 처리 — rate limit 장애 위험 구조적으로 제거<br>
-              <sup>¹</sup> No Cache 처리량은 GitHub API rate limit(5,000 points/h)에 의해 결정되며 서버 처리 성능과 무관
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <hr>
-
-      <!-- ─────── Qiri ─────── -->
-      <div class="project">
-        <div class="project-header">
-          <h3>Qiri <spont-weight:400;font-size:14px;">(팀 4인, 2025.04 ~ 2025.09)</span></h3>
-          <div class="project-links"><a href="https://www.youtube.com/watch?v=rTH4DSMs_nk" target="_blank">데모 영상</a> |
-            GitHub (Private)</div>
-        </div>
-        <div class="project-body">
-          <p class="project-summary">손 제스처로 AI와 소통하는 애플워치용 경량 챗봇 서비스</p>
-          <div class="highlight-box">
-            한국어 질의 정규화를 통해 캐시 히트율을 <s상</strong>시키고, 평균 응답 시간을 <strong>55% 단축</strong>했습니다.
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag tech-rust">Rust</span>
-            <span class="tech-tag tech-axum">Axum</span>
-            <span class="tech-tag tech-docker">Docker</span>
-            <span class="tech-tag tech-ec2">EC2</span>
-            <span class="tech-tag tech-elasticache">Elasticache</span>
-            <span class="tech-tag tech-nginx">nginx</span>
-            <an class="tech-tag tech-mysql">MySQL</span>
-            <span class="tech-tag tech-redis">Redis</span>
-            <span class="tech-tag tech-tailscale">Tailscale</span>
-          </div>
-
-          <div class="role-group">
-            <div class="role-group-title">백엔드 전담 (Rust + Axum)</div>
-            <ul class="role-list">
-              <li>EC2 메인 서버와 온프레미스 LLM 서버를 분리 운영, Tailscale 사설 네트워크로 외부 노출 없는 내부 통신 환경 구축</li>
-        <li>LLM 응답 버퍼링으로 캐시 일관성 보장 — 스트리밍 대신 전체 응답 수신 후 저장 방식 채택</li>
-              <li>한국어 조사 정규화로 동일 의미 쿼리를 단일 캐시 키로 수렴 — LLM 호출 비용 절감 및 히트율 6배 향상</li>
-              <li>Sign in with Apple OAuth 인증 구현 — Apple 공개 키 동적 조회·JWT 서명 검증으로 토큰 위조 차단</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title"🔍 문제 인식</div>
-
-          <div class="numbered-section">
-            <h4>1. 사용자 표현 차이로 동일 의미 요청이 서로 다른 캐시 키로 분기</h4>
-            <ul class="role-list">
-              <li>"이거 뭐야"와 "이거는 뭐야?"처럼 의미는 같지만 조사·어미 차이로 캐시 미스 발생</li>
-              <li>캐시 히트율 저하로 LLM 호출 비율 증가, LLM 응답 지연이 그대로 사용자 응답 시간에 반영</li>
-              <li>캐시 략 부재로 히트율 저하</li>
-            </ul>
-          </div>
-
-          <div class="subsection-title">⚙️ 해결 과정</div>
-
-          <div class="numbered-section">
-            <h4>1. 조사 정규화로 동일 의미 요청을 단일 캐시 키로 수렴</h4>
-            <ul class="role-list">
-              <li>의미에 영향을 주지 않는 한국어 조사(은/는/이/가/을/를/의/에 등) 47개를 토큰 단위로 제거</li>
-              <li>긴 조사부터 순서대로 검사í¶분 치환 오류 방지 (예: "에서는"을 먼저 처리해야 "에서"가 남지 않음)</li>
-              <li>정규화된 문자열을 해시화해 캐시 키로 사용 — 문자열 직접 저장 대비 메모리 효율 확보</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>2. LLM 응답 버퍼링으로 캐시 일관성 보장</h4>
-            <ul class="role-list">
-              <li>LLM 서버의 스트리밍 응답을 캐시하려면 전체 응ë´야 함</li>
-              <li>응답 전체를 메모리에 버퍼링 후 반환하는 방식 채택 (스트리밍 대신 캐시 일관성 우선)</li>
-              <li>초기 응답 지연 소폭 증가 감수 — 캐시 히트 시 LLM 호출 완전 생략으로 전체 응답 시간 대폭 단축</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>3. 락 프리 인메모리 캐시로 동시 요청 처리</h4>
-            <ul class="role-list">
-            <li>다중 요청 환경에서 캐시 읽기·쓰기 경합을 없애기 위해 락 프리 동시성 해시맵(DashMap) 사용</li>
-              <li>Arc로 핸들러 간 캐시 공유 — 별도 동기화 없이 스레드 안전성 확보</li>
-            </ul>
-          </div>
-
-          <div class="numbered-section">
-            <h4>4. 정규화 효과를 2단계 부하 테스트로 검증</h4>
-            <ul class="role-list">
-              <li>캐시 웜업 후 조사 변형 쿼리로 히트율을 검시나리오 작성</li>
-              <li>정규화 전후 캐시 히트율·응답 지연을 수치로 측정해 적용 범위 확정</li>
-            </ul>
-          </div>
-
-          <div class="result-box">
-            <div class="subsection-title" style="margin-top:0;">🎯 개선 포인트</div>
-            <p class="result-note" style="margin-bottom:8px;">모델을 바꾸지 않고도 시스템 설계만으로 사용자 체감 성능을 개선했습니다.</p>
-            <p class="result-label">k6 규화 전/후 각 10 VU / 100 iterations, 조사 변형 쿼리 20종</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Before</th>
-                  <th>After</th>
-                  <th>Improvement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Cache Hit Rate</td>
-                  <td>~10%</td>
-                  <td class="highlight">~60%</td>
-                  <td>+>
-                </tr>
-                <tr>
-                  <td>Avg Latency</td>
-                  <td>~36s</td>
-                  <td class="highlight">~16s</td>
-                  <td>-55%</td>
-                </tr>
-                <tr>
-                  <td>Cache Hit Latency (p95)</td>
-                  <td>~162ms</td>
-                  <td class="highlight">~112ms</td>
-                  <td>-31%</td>
-                </tr>
-                <tr>
-                  <td>Cache Miss Latency</td>
-                  <td>~40s</td>
-                  <td>~40s</td>
-                  <td>거의 동일</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="result-note">캐시 미스 지연은 개선 전후 거의 동일 — 정규화가 기존 요청 품질에 영향 없이 히트율만 높임</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════ 토이 프로젝트 ═â════════════════════════════ -->
-    <div class="section">
-      <div class="section-title">📁 토이 프로젝트</div>
-      <div style="border:1px solid #e0e0e0; border-radius:8px; padding:18px 22px;">
-        <ul class="toy-list">
-          <li>
-            <a href="https://github.com/N0067H/astron" target="_blank"><strong>astron</strong></a> — 로켓을 컨셉으로 만든 인터프리터
-            프로그래밍 언어
-            <spanss="tech-tag tech-rust" style="font-size:10px; vertical-align:middle; margin-left:6px;">Rust</span>
-            <ul class="toy-sub">
-              <li>토크나이저, 파서, AST, 실행기 구조를 직접 설계하며 언어 구현 원리를 학습</li>
-            </ul>
-          </li>
-          <li>
-            <a href="https://github.com/N0067H/cavira" target="_blank"><strong>cavira</strong></a> — 프로세스 실행 분석 CLI 도구
-            <span class="tech-tag tech-rust" style="font-size:10pign:middle; margin-left:6px;">Rust</span>
-            <ul class="toy-sub">
-              <li>프로세스 실행 과정을 추적, 분석하는 CLI 도구로, 리눅스 프로세스 모델에 대한 이해를 목적으로 개발</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════ 오픈소스 기여 ══════════════════════════âiv class="section">
-      <div class="section-title">🤝 오픈소스 기여</div>
-
-      <div class="os-box">
-        <div class="os-title">
-          <a href="https://github.com/wHoIsDReAmer/RabbiTTY" target="_blank">RabbiTTY</a> — Rust 기반 크로스플랫폼 터미널 에뮬레이터
-          &nbsp;|&nbsp; PR <a href="https://github.com/wHoIsDReAmer/RabbiTTY/pull/1" target="_blank">#1</a>, <a
-            href="https://github.com/wHoIsDReAmer/RabbiTTY/pull/5" target="_blank">#5</a>, <a
-            href="https://github.com/wHoIsDReAmer/RabbiTTY/pull/8" target="_blank">#8</a>
-        </div>
-        <ul class="os-list">
-          <li>Windows 셸(cmd, PowerShell) 탭 지원 기능 추가</li>
-          <li>조건부 컴파일 적용으로 실행 환경에 따른 명령 셸 분리 — 크로스 플랫폼 빌드 호환성 확보</li>
-        </ul>
-      </div>
-
-      <div class="os-box">
-        <div class="os-title">
-          <a href="https://github.com/acorn497/spectra-log" target="_blank">spectra-logode.js 터미널 로깅 라이브러리
-          &nbsp;|&nbsp; PR <a href="https://github.com/acorn497/spectra-log/pull/1" target="_blank">#1</a>, <a
-            href="https://github.com/acorn497/spectra-log/pull/2" target="_blank">#2</a>
-        </div>
-        <ul class="os-list">
-          <li>CommonJS → ESM 전환 리팩토링 주도</li>
-          <li>README 코드 예제 및 사용법 문서 전면 업데이트</li>
-          <li>실제 사용자의 마이그레이션 비용까지 고려하며 변ê업 진행</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════ 커리어 ════════════════════════════════ -->
-    <div class="section">
-      <div class="section-title">👣 커리어</div>
-      <div style="border:1px solid #e0e0e0; border-radius:8px; padding:16px 22px;">
-        <ul class="career-list">
-          <li><span class="career-date">3</span><span class="career-desc">정보처리산업기사 취득</span></li>
-          <li><span class="career-date">2026.01</span><span class="career-desc"><a href="https://www.sweech.io/"
-                target="_blank">주식회사 스위치</a> 인턴십</span></li>
-          <li><span class="career-date">2026.01</span><span class="career-desc">2학기 캡스톤 프로젝트 동상</span></li>
-          <li><span class="career-date">2025.12</span><span class="career-desc">교내 전공 컨퍼런스 연사 — '초보 개발자를 망치는 잘못된 공부
-              방법'</span></li>
-          <li><span class="career-date">2025.11</span><span class="career-desc">프로그래밍기능사 취득</span></li>
-          <li><span class="career-date">2025.09</span><span class="career-desc">제 60회 전국기능경기대회 정보기술 종목 장려상</span></li>
-          <li><span class="career-date">2025.07</span><span class="career-desc">1학기 캡스톤 프로젝트 대상</span></li>
-          <span class="career-date">2024.12</span><span class="career-desc">제 4회 경상북도 SW-AI 인재양성 프로젝트 우수상</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="closing">
-        구조가 바뀌면 문제가 사라진다고 믿습니다.<br>
-        이 포트폴리오에 담긴 모든 개선은 그 믿음을 검증한 기록입니다.
-      </div>
-    </div>
+    <!-- ===== SECTION: activities ===== -->
+    <section id="activities" class="section-gap">
+      <h2 class="section-title">Activities</h2>
+      <div id="act-root"></div>
+    </section>
 
   </div>
+</main>
+
+<footer id="footer">백엔드 개발자 류승엽 · 2026</footer>
+
+<!-- ===== DATA ===== -->
+<script id="data" type="application/json">
+{
+  "hero": {
+    "name": "백엔드 개발자 류승엽",
+    "role": "",
+    "tagline": [
+      "안녕하세요! 관행이 아닌 <strong>경험에 따른 근거로 기술을 선택</strong>하는 백엔드 개발자입니다.",
+      "<strong>Elasticsearch 도입</strong>으로 p99 응답 시간을 <strong>78% 개선</strong>하고, 캐시 키 정규화로 히트율을 <strong>6배 향상</strong>시켰습니다.",
+      "",
+      "문제의 요구사항과 제약조건에 따라 <strong>Java와 Rust</strong>를 선택하며,<br>주요 기술·설계 결정의 근거와 <strong>트레이드오프를 문서화</strong>하는 습관을 갖고 있습니다.",
+      "",
+      "<strong>AI를 적극 활용</strong>하여 반복적인 구현 비용을 줄입니다.<br>대신 <strong>시스템 설계와 트레이드오프 분석, 핵심 의사결정</strong>에 집중합니다."
+    ],
+    "contact": {
+      "email": "",
+      "tel": "",
+      "github": ""
+    }
+  },
+  "about": {
+    "bio": [
+      {
+        "label": "학력",
+        "items": [
+          {
+            "main": "경북소프트웨어마이스터고",
+            "sub": "졸업 예정 2027.12.31 · 현장실습 가능 2026.08~"
+          }
+        ]
+      },
+      {
+        "label": "연락처",
+        "items": [
+          "010-8034-0689",
+          "n006h3417h@gmail.com",
+          "github.com/N0067H"
+        ]
+      }
+    ],
+    "skills": {
+      "Backend": ["Java (Spring Boot, WebFlux)", "Rust (Axum, Actix)"],
+      "Database": ["PostgreSQL", "Redis", "DynamoDB", "Elasticsearch"],
+      "Infra": ["Docker", "Kafka", "AWS (EC2, S3, SNS)", "Terraform", "GitHub Actions"],
+      "Monitor": ["Prometheus", "Grafana", "CloudWatch"]
+    }
+  },
+  "mainProjects": [
+    {
+      "title": "JobLens",
+      "subtitle": "채용 공고 수집, 검색, 알림, 트렌드 분석 백엔드",
+      "period": "개인, 2026.05 ~",
+      "archImage": "sources/joblens/architecture.svg",
+      "links": [{"label": "GitHub", "url": "https://github.com/N0067H/joblens-backend"}],
+      "metrics": [
+        {"value": "-78%", "label": "p99 237ms → 49ms (ES 도입)"},
+        {"value": "8ms", "label": "검색 p95 (캐시 히트)"},
+        {"value": "7종", "label": "커스텀 Prometheus 메트릭"}
+      ],
+      "problem": [
+        "원티드, 잡코리아, 링크드인 3개 플랫폼에 공고가 분산되어 있어 매일 직접 순회해야 했다. 마감이 짧은 공고는 수동 확인 주기 사이에 놓치는 경우가 생겼다",
+        "원하는 기술 스택 공고가 게시돼도 실시간으로 알 방법이 없어 지원 타이밍을 놓쳤다",
+        "Java, Rust 등 기술 스택별 채용 수요 변화를 수치 없이 감으로만 판단하고 있었다"
+      ],
+      "stack": [
+        ["Language", "Java"],
+        ["Framework", "Spring Boot"],
+        ["Search", "Elasticsearch"],
+        ["Database", "PostgreSQL"],
+        ["Cache", "Redis"],
+        ["Infra", "Docker"],
+        ["Infra", "GitHub Actions"],
+        ["Infra", "AWS EC2"],
+        ["Monitor", "Prometheus"],
+        ["Monitor", "Grafana"],
+        ["Test", "Testcontainers"],
+        ["Test", "JUnit 5"],
+        ["Test", "Mockito"],
+        ["Search", "nori"]
+      ],
+      "techReason": [
+        "Java: 공고 수집, 이메일 등 I/O 바운드 작업을 WebFlux 없이 수백 동시 처리. 명령형 코드를 유지해 복잡도를 억제했다",
+        "Elasticsearch, nori: PG LIKE sequential scan에서 <strong>p99 237ms</strong>를 관측한 뒤 전환. 한국어 형태소 분리로 검색 품질을 개선해 <strong>p99 49ms(-78%)</strong>로 단축했다",
+        "Redis 다중 용도: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합했다",
+        "Testcontainers: ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong>을 달성했다"
+      ],
+      "dataModel": "users ──(1:N)── user_alerts (조건 JSONB)\n      ──(1:N)── notifications\n      ──(M:N)── job_postings ── bookmarked_jobs\n                             └── application_records\ncompanies ──(1:N)── job_postings ──(M:N)── tech_tags\n                                           └──(1:N)── trend_snapshots",
+      "dataModelImage": "sources/joblens/datamodel.svg",
+      "features": [
+        "원티드, 잡코리아, 링크드인 공고를 자동 수집해 단일 인터페이스에서 검색한다",
+        "기술 스택과 키워드 조건을 설정하면 조건에 맞는 공고 등록 시 이메일로 즉시 알린다",
+        "기술 스택별 공고 수 변화를 주간 트렌드로 집계해 수치로 제공한다",
+        "공고 북마크와 지원 상태를 기록한다"
+      ],
+      "implPoints": [
+        "@Scheduled, @Async, 이벤트 체인(JobCollectedEvent → JobIndexedEvent)으로 수집, 색인, 알림을 <strong>도메인 결합 없이</strong> 연결했다",
+        "ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성을 확보한다",
+        "Redis를 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성, Rate Limit 슬라이딩 윈도우 4가지 용도로 <strong>단일 인프라에 통합</strong>했다",
+        "Testcontainers로 ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong>을 달성했다",
+        "<strong>Prometheus 커스텀 메트릭 7종</strong>을 수집하고 <strong>Grafana 17패널 대시보드</strong>로 시스템 상태를 시각화한다"
+      ],
+      "troubleshooting": [
+        {
+          "problem": "@TransactionalEventListener에서 TransactionRequiredException 발생",
+          "cause": "AFTER_COMMIT 시점에 @Async 별도 스레드로 실행되어 부모 트랜잭션이 이미 소멸된 상태. REQUIRED 전파로 참여할 트랜잭션이 없어 예외가 발생했다",
+          "solution": "모든 이벤트 리스너에 @Transactional(propagation = REQUIRES_NEW) 일괄 적용",
+          "result": "공고 수집, 태그 추출, ES 색인, 알림으로 이어지는 파이프라인을 안정화했다"
+        },
+        {
+          "problem": "ES 색인 문서에 techTags: [] — 기술 태그로 검색해도 결과 없음",
+          "cause": "JobCollectedEvent 리스너가 TechTagExtractor(~2초)와 EsIndexListener 두 곳에 연결됐다. 비동기 동시 실행으로 태그 추출 전에 ES 색인이 먼저 완료되는 <strong>Race Condition</strong>이 발생했다",
+          "solution": "색인 트리거를 JobCollectedEvent에서 JobIndexedEvent로 분리. TechTagExtractor가 완료된 후 JobIndexedEvent를 발행하고 EsIndexListener가 실행되는 순서를 보장했다",
+          "result": "태그가 포함된 상태로 ES 색인을 보장해 기술 태그 검색이 정상 동작한다"
+        },
+        {
+          "problem": "트렌드 API 항상 빈 배열 반환",
+          "cause": "periodStart를 이번 주 월요일 ISO 경계로 계산해 WHERE posted_at >= 이번 주 월요일 조건에 해당하는 기존 공고가 0건이었다",
+          "solution": "ISO 주 경계를 최근 N일 롤링 윈도우로 교체했다. LocalDate.now().minusWeeks(1) 기준으로 조회 범위를 설정한다",
+          "result": "기존 공고 데이터를 포함한 트렌드 집계 결과를 정상 반환한다"
+        }
+      ],
+      "performance": {
+        "before": "PG FTS (96건 기준)\np99: 237ms / max: 329ms\n캐시 미스 p95: 24ms",
+        "after": "ES + nori\np99: 49ms (-78%) / max: 56ms (-83%)\n캐시 히트 p95: 8ms"
+      },
+      "retrospective": "Race Condition이 발생하고 나서야 이벤트 순서 의존성을 설계에 반영했다. 단순하게 시작하고 병목이 실측으로 확인될 때 복잡도를 추가하는 순서가 맞다.",
+      "future": [
+        "nori user_dictionary에 기술 외래어를 등록해 한국어 검색 품질을 개선한다",
+        "JobCollector 구현체 교체만으로 실 크롤러를 연동할 수 있다. 인터페이스 구조는 이미 준비됐다",
+        "트랜잭셔널 아웃박스 패턴을 도입해 앱 재시작 시 ApplicationEvent 유실을 제거한다",
+        "Blue-Green 배포를 도입해 Docker Compose 재시작 다운타임을 없앤다",
+        "ECS Fargate 전환을 위한 Dockerfile 표준화를 완료했다. 스케일 아웃 필요 시 즉시 전환 가능하다"
+      ]
+    },
+    {
+      "title": "Pulse",
+      "subtitle": "API 엔드포인트 헬스체크, 이력 저장, 장애 알림 서비스",
+      "period": "개인, 2026.02 ~ 2026.05",
+      "links": [
+        {"label": "GitHub", "url": "https://github.com/n0067h/pulse-backend"},
+        {"label": "Demo", "url": "https://youtu.be/f4yI23oUCqU"}
+      ],
+      "metrics": [
+        {"value": "-99.9%", "label": "이력 조회 행 수 (최대 43,200개 → 요청 수)"},
+        {"value": "-50%", "label": "DB 쓰기 / 체크 1회"},
+        {"value": "-33%", "label": "한 사이클 최대 쓰기 (API 50개 기준)"}
+      ],
+      "archImage": "sources/pulse/architecture.svg",
+      "archW": 1918,
+      "archH": 1685,
+      "problem": [
+        "운영 중인 API가 다운돼도 직접 요청을 보내보기 전까지 인지할 수 없었다. 장애 감지가 사용자 문의에 의존하는 구조였다",
+        "체크 이력을 저장하지 않아 장애 시작 시점과 지속 시간을 사후에 파악할 수 없었다. 포스트모텀 작성이 불가능했다"
+      ],
+      "stack": [
+        ["Language", "Java"],
+        ["Framework", "Spring Boot"],
+        ["Framework", "WebFlux"],
+        ["Database", "DynamoDB"],
+        ["Infra", "EC2"],
+        ["Infra", "Terraform"],
+        ["Infra", "S3"],
+        ["Infra", "GitHub Actions"],
+        ["Alert", "SNS"],
+        ["Monitor", "CloudWatch"],
+        ["Test", "Testcontainers"],
+        ["Test", "JUnit 5"]
+      ],
+      "techReason": [
+        "DynamoDB: 온디맨드 과금으로 <strong>유휴 상태 비용을 제로로 유지</strong>했다. 단순 PK/SK 조회가 주를 이루는 접근 패턴에 최적이었고, RDS 대비 스키마 관리 없이 빠르게 배포했다",
+        "인메모리 스케줄: 앱 시작 시 1회 전체 로드 후 API별 독립 스케줄로 관리해 <strong>체크 주기당 DB 읽기를 제거</strong>했다. API가 1,000개로 늘어도 <strong>체크 1회당 DB 호출은 0건</strong>이다",
+        "Terraform: EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 환경 재현성을 확보했다. <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>하고 변경 이력을 git으로 추적한다"
+      ],
+      "dataModel": "MonitoredApi\n  PK: apiId\n  url, interval, timeout, threshold\n  consecutiveFailures, lastAlertAt\n\nCheckHistory\n  PK: apiId\n  SK: ISO 8601 timestamp  (사전순 = 시간순)\n  statusCode, responseTimeMs, success",
+      "dataModelImage": "sources/pulse/datamodel.svg",
+      "features": [
+        "등록한 API 엔드포인트를 설정한 주기마다 자동으로 헬스체크한다",
+        "연속 실패 횟수가 임계값을 초과하면 이메일로 즉시 알린다. 쿨다운 설정으로 중복 알림을 방지한다",
+        "체크 결과 이력을 저장해 장애 시작 시점과 지속 시간을 사후에 파악할 수 있다",
+        "CloudFront 단일 배포에서 API 요청은 EC2로, 정적 파일은 S3로 경로별 오리진을 분리했다"
+      ],
+      "implPoints": [
+        "앱 시작 시 1회 전체 로드 후 API별 독립 ScheduledExecutorService로 등록해 <strong>체크 주기당 DB 읽기를 제거</strong>했다. API 1,000개로 늘어도 체크 1회당 DB 호출은 0건이다",
+        "CompletableFuture로 HTTP 체크를 <strong>논블로킹 처리</strong>하고 블로킹 후처리는 <strong>전용 스레드 풀로 분리</strong>했다",
+        "UpdateItem 단일 호출로 갱신 필드를 통합해 DB 쓰기를 체크 1회당 2회에서 <strong>1회로 감소(-50%)</strong>했다",
+        "소트키를 ISO 8601 형식으로 설계해 DynamoDB Query ScanIndexForward=false + Limit=N으로 정렬과 페이징을 DB에서 처리했다. 이력 조회 행 수 <strong>최대 43,200개에서 요청 수만큼으로 감소(-99.9%)</strong>",
+        "Terraform으로 EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>한다"
+      ],
+      "troubleshooting": [
+        {
+          "problem": "모니터링 주기마다 DynamoDB 전체 Scan 발생",
+          "cause": "매 주기마다 테이블 전체를 읽어 메모리에 올린 뒤 애플리케이션에서 필터링하는 구조였다. API 수가 늘수록 읽기 비용이 테이블 크기에 비례해 증가했다",
+          "solution": "앱 시작 시 1회만 전체 조회 후 각 API를 인메모리 ScheduledExecutorService에 독립 등록. 체크 완료 후 자신의 인터벌 기준으로만 다음 실행을 재등록. CRUD 발생 시 DB와 인메모리 스케줄을 동시에 반영",
+          "result": "DB 읽기 비용이 API 개수와 완전히 무관한 구조로 전환. <strong>체크 주기당 O(n) Scan에서 체크 1회당 O(1)로 개선</strong>"
+        },
+        {
+          "problem": "체크 1회에 DB 쓰기가 2~3회로 분산 발생",
+          "cause": "체크 결과 저장, 연속 실패 횟수 갱신, 알림 발송 시각 갱신이 각각 별도 네트워크 호출로 실행됐다. API 50개 기준 한 사이클에 최대 150회 쓰기가 동일 파티션에 집중됐다",
+          "solution": "갱신 필드를 인메모리에서 먼저 병합한 뒤 UpdateItem 단일 호출로 통합. 알림 발송 시각도 인메모리에 반영 후 기존 저장 호출에 흡수해 전용 갱신 호출을 제거",
+          "result": "DB 쓰기 / 체크 1회 기준 2회에서 1회로 감소(<strong>-50%</strong>). 한 사이클 최대 쓰기는 150회에서 100회로 감소(<strong>-33%</strong>)"
+        },
+        {
+          "problem": "이력 조회 응답 시간이 누적량에 비례해 증가",
+          "cause": "이력 조회 시 해당 API의 전체 결과를 DynamoDB에서 읽어온 뒤 정렬과 페이징을 애플리케이션에서 처리했다. TTL 30일 기준 최대 43,200개를 전량 읽는 구조였다",
+          "solution": "소트키를 ISO 8601 형식으로 설계해 사전순과 시간순을 일치시켰다. DynamoDB Query의 ScanIndexForward=false와 Limit=N으로 정렬과 제한을 DB 단계에서 처리해 애플리케이션 정렬을 제거했다",
+          "result": "이력 조회 행 수가 최대 43,200개에서 요청 건수만큼으로 감소(<strong>-99.9%</strong>). 이력 누적과 무관한 일정 응답 속도를 확보했다"
+        }
+      ],
+      "performance": {
+        "before": "DB 쓰기 / 체크 1회: 2회\n한 사이클 최대 쓰기 (API 50개): 150회\n이력 조회 행 수: 최대 43,200개\n알림 경로 추가 DB 호출: 2회",
+        "after": "DB 쓰기 / 체크 1회: 1회 (-50%)\n한 사이클 최대 쓰기 (API 50개): 100회 (-33%)\n이력 조회 행 수: 요청 수만큼 (-99.9%)\n알림 경로 추가 DB 호출: 0회"
+      },
+      "retrospective": "단순 구현에서 시작해 주기마다 전체 Scan하는 구조가 됐고, 읽기 비용 문제가 명확해진 뒤 설계를 전면 교체했다. DynamoDB는 데이터 접근 패턴을 키 설계에 먼저 반영하지 않으면 재설계 비용이 크다는 점을 확인했다.",
+      "future": [
+        "멀티 인스턴스 확장을 위해 인메모리 스케줄을 DB 기반 분산 스케줄러로 전환한다. EC2 재시작 후에도 스케줄 상태를 유지한다",
+        "알림 쿨다운 상태를 Redis 외부 저장소로 분리해 다중 인스턴스 환경에서 중복 알림을 제거한다",
+        "집계 쿼리 복잡도가 높아지는 시점에 DynamoDB를 RDS로 전환한다"
+      ]
+    },
+    {
+      "title": "Qiri",
+      "subtitle": "손 제스처로 AI와 소통하는 애플워치용 경량 챗봇 서비스",
+      "archImage": "sources/qiri/architecture.svg",
+      "period": "팀 4인, 2025.04 ~ 2025.09",
+      "links": [
+        {"label": "Demo", "url": "https://www.youtube.com/watch?v=rTH4DSMs_nk"}
+      ],
+      "metrics": [
+        {"value": "+6배", "label": "캐시 히트율 (~10% → ~60%)"},
+        {"value": "-55%", "label": "평균 응답 시간 (~36s → ~16s)"},
+        {"value": "-31%", "label": "캐시 히트 p95 (~162ms → ~112ms)"}
+      ],
+      "problem": [
+        "한국어 조사 표현이 다른 동일한 의미의 질문이 캐시 미스로 처리되어 히트율이 약 10%에 머물렀다. 요청의 90%가 매번 LLM을 새로 호출했다",
+        "LLM 호출 평균 응답 시간이 약 40초였고 히트율이 낮아 대부분의 사용자 요청에서 이 지연이 그대로 노출됐다"
+      ],
+      "stack": [
+        ["Language", "Rust"],
+        ["Framework", "Axum"],
+        ["Cache", "Redis"],
+        ["Cache", "Elasticache"],
+        ["Database", "MySQL"],
+        ["Infra", "Docker"],
+        ["Infra", "EC2"],
+        ["Infra", "Nginx"],
+        ["Network", "Tailscale"]
+      ],
+      "techReason": [
+        "Rust: <strong>GC 없는 런타임</strong>으로 응답 지연을 예측 가능하게 유지했다. 컴파일 타임 안전성 보장으로 <strong>런타임 오류 없이 메모리 안전성을 확보</strong>했다",
+        "Redis (Elasticache): 반복 쿼리의 LLM 호출을 캐시로 대체해 평균 응답 시간을 <strong>36s에서 16s로 단축</strong>했다. Elasticache 관리형 서비스로 캐시 인프라 운영 부담을 최소화했다",
+        "Tailscale: WireGuard 기반 암호화 터널로 EC2와 온프레미스 LLM 서버를 사설 네트워크로 연결했다. 복잡한 VPN 구성 없이 <strong>외부 노출 차단과 암호화 통신을 동시에 확보</strong>했다"
+      ],
+      "dataModel": "users\n  PK: user_id\n  apple_sub  (Apple OAuth 식별자)\n  created_at\n\nchat_history\n  PK: id\n  user_id, query_hash  (정규화된 문자열 해시)\n  query_text, response_text\n  created_at",
+      "dataModelImage": "sources/qiri/datamodel.svg",
+      "features": [
+        "애플워치 손 제스처로 LLM 챗봇에 질문하고 응답을 받는다",
+        "Sign in with Apple OAuth로 인증하고 대화 이력을 관리한다",
+        "EC2와 온프레미스 GPU 서버를 Tailscale 사설 네트워크로 연결해 외부 노출 없이 LLM을 호출한다"
+      ],
+      "implPoints": [
+        "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 동일 의미 쿼리를 <strong>단일 캐시 키로 수렴</strong>했다. 캐시 히트율 약 10%에서 약 60%로 향상",
+        "LLM 스트리밍 응답을 메모리에 버퍼링 후 완성된 상태로 저장해 캐시 히트 시 <strong>LLM 호출을 완전히 생략</strong>한다. 초기 지연 소폭 증가를 감수한 <strong>의도적 트레이드오프</strong>",
+        "<strong>DashMap 락 프리 동시성 해시맵</strong>으로 다중 요청 환경에서 캐시 읽기, 쓰기 경합을 제거했다",
+        "Apple 공개 키를 동적으로 조회해 JWT 서명을 검증하고 토큰 위조를 차단한다"
+      ],
+      "troubleshooting": [
+        {
+          "problem": "조사·어미가 다른 동일 의미 쿼리가 캐시 미스로 처리됨",
+          "cause": "한국어는 '이거 뭐야'와 '이거는 뭐야'처럼 의미는 같지만 조사 차이로 문자열이 달라진다. 원문을 그대로 캐시 키로 사용해 동일 의미 쿼리가 서로 다른 키로 분기됐다",
+          "solution": "<strong>한국어 조사 47개</strong>를 토큰 단위로 제거해 의미를 보존한 채 표면 형태를 정규화했다. 긴 조사부터 순서대로 처리해 부분 치환 오류를 제거했다. 정규화된 문자열을 해시화해 캐시 키로 사용했다",
+          "result": "캐시 히트율이 <strong>약 10%에서 약 60%로 향상</strong>됐다. LLM 호출 비율이 줄어 평균 응답 시간이 <strong>36s에서 16s로 단축(-55%)</strong>"
+        },
+        {
+          "problem": "LLM 스트리밍 응답을 캐시하면 불완전한 내용이 저장됨",
+          "cause": "LLM 서버가 스트리밍으로 응답을 전송해, 수신 도중 캐시에 저장하면 완성되기 전의 불완전한 내용이 기록됐다",
+          "solution": "응답 전체를 메모리에 버퍼링 후 완성된 상태로 캐시에 저장했다. 초기 응답 지연 소폭 증가를 감수하고 캐시 일관성을 확보한 <strong>의도적 트레이드오프</strong>다",
+          "result": "캐시 히트 시 완전한 응답이 반환된다. 캐시 히트 p95 기준 <strong>162ms에서 112ms로 단축(-31%)</strong>"
+        }
+      ],
+      "performance": {
+        "before": "Cache Hit Rate: ~10%\nAvg Latency: ~36s\nCache Hit p95: ~162ms\nCache Miss Latency: ~40s",
+        "after": "Cache Hit Rate: ~60% (+6배)\nAvg Latency: ~16s (-55%)\nCache Hit p95: ~112ms (-31%)\nCache Miss Latency: ~40s (동일)"
+      },
+      "retrospective": "부하 테스트로 히트율이 기대보다 낮다는 것을 발견하고 조사 정규화를 도입했다. 캐시 미스 지연은 정규화 전후 동일하게 유지됐고, 정규화는 기존 요청 품질을 보존하면서 히트율을 6배 높였다.",
+      "future": [
+        "형태소 분석기 수준으로 정규화 커버리지를 확장해 히트율을 더 높인다",
+        "Elasticache 스냅샷 설정을 추가해 서버 재시작 후에도 캐시 히트율을 즉시 회복한다"
+      ]
+    }
+  ],
+  "smallProjects": [
+    {
+      "title": "astron",
+      "period": "개인",
+      "desc": "로켓을 컨셉으로 만든 인터프리터. Rust로 구현한 언어 처리 프로젝트.",
+      "stack": ["Rust"],
+      "link": "https://github.com/N0067H/astron"
+    },
+    {
+      "title": "cavira",
+      "period": "개인",
+      "desc": "프로세스 실행 분석 CLI 도구. 시스템 호출 추적 및 분석.",
+      "stack": ["Rust"],
+      "link": "https://github.com/N0067H/cavira"
+    },
+    {
+      "title": "crypto-stream",
+      "period": "개인, 2026.05 ~ 2026.06",
+      "desc": "Rust와 Kafka로 구축한 실시간 암호화폐 가격 스트리밍 API. Kafka 기반 수집/전달 분리와 SSE 브로드캐스트 채널 구조로 평균 지연시간을 11.9초에서 28ms로 단축했다.",
+      "stack": ["Rust", "Actix", "Kafka", "Docker"],
+      "link": "https://github.com/N0067h/crypto-stream"
+    }
+  ],
+  "activities": [
+    {
+      "year": "2026",
+      "items": [
+        {"date": "2026.01", "text": "정보처리산업기사 취득"},
+        {"date": "2026.01", "text": "2학기 캡스톤 프로젝트 동상"}
+      ]
+    },
+    {
+      "year": "2025",
+      "items": [
+        {"date": "2025.12", "text": "교내 전공 컨퍼런스 연사 ('초보 개발자를 망치는 잘못된 공부법')"},
+        {"date": "2025.11", "text": "프로그래밍기능사 취득"},
+        {"date": "2025.09", "text": "제 60회 전국기능경기대회 정보기술 종목 장려상"},
+        {"date": "2025.07", "text": "1학기 캡스톤 프로젝트 대상"}
+      ]
+    },
+    {
+      "year": "2024",
+      "items": [
+        {"date": "2024.12", "text": "제 4회 경상북도 SW-AI 인재양성 프로젝트 우수상"}
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- ===== RENDER ===== -->
+<script>
+  /* ── Mobile menu ── */
+  function initMob() {
+    document.getElementById('mob-btn').addEventListener('click', () =>
+      document.getElementById('mob-menu').classList.toggle('open'));
+  }
+  function closeMob() {
+    document.getElementById('mob-menu').classList.remove('open');
+  }
+
+  /* ── Helpers ── */
+  const e = (s) => String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const r = (s) => e(s).replace(/&lt;strong&gt;/g,'<strong>').replace(/&lt;\/strong&gt;/g,'</strong>').replace(/&lt;br&gt;/g,'<br>');
+
+  const badge = (t) => `<span class="badge">${e(t)}</span>`;
+  const hr = () => '<div class="mp-divider"></div>';
+  const lbl = (t) => `<div class="mp-label">${e(t)}</div>`;
+
+  /* ── Hero ── */
+  function renderHero(d) {
+    const { name, role, tagline, contact } = d;
+    const contacts = [];
+    if (contact.email) contacts.push(`<a href="mailto:${e(contact.email)}">${e(contact.email)}</a>`);
+    if (contact.tel)   contacts.push(`<span>${e(contact.tel)}</span>`);
+    if (contact.github) contacts.push(`<a href="https://github.com/${e(contact.github)}" target="_blank">GitHub @${e(contact.github)}</a>`);
+    document.getElementById('hero-root').innerHTML = `
+      <h1 class="hero-name">${e(name)}</h1>
+      ${role ? `<div class="hero-role">${e(role)}</div>` : ''}
+      ${contacts.length ? `<div class="hero-contact">${contacts.join('')}</div>` : ''}
+      <p class="hero-tagline">${(Array.isArray(tagline) ? tagline : [tagline]).map(t => t ? `<span style="display:block">${r(t)}</span>` : '<span style="display:block;margin-top:0.4em"></span>').join('')}</p>
+    `;
+  }
+
+  /* ── About ── */
+  function renderAbout(d) {
+    const bio = d.bio.map(g => `
+      <div class="bio-group">
+        <div class="bio-label">${e(g.label)}</div>
+        <div class="bio-items">${g.items.map(t => typeof t === 'string'
+          ? `<div>${e(t)}</div>`
+          : `<div class="bio-main">${e(t.main)}<span class="bio-sub">${e(t.sub)}</span></div>`
+        ).join('')}</div>
+      </div>
+    `).join('');
+    const skills = Object.entries(d.skills).map(([cat, items]) => `
+      <div class="skill-group">
+        <div class="skill-group-title">${e(cat)}</div>
+        <div class="badges">${items.map(badge).join('')}</div>
+      </div>
+    `).join('');
+    document.getElementById('about-root').innerHTML = `
+      <div class="about-grid">
+        <div>${bio}</div>
+        <div>${skills}</div>
+      </div>
+    `;
+  }
+
+  /* ── Troubleshooting template ── */
+  function renderTS(list) {
+    return list.map((t, i) => `
+      <div class="ts-block">
+        <div class="ts-header">
+          <span class="ts-num">TS-${i+1}</span>
+          <span>${e(t.problem)}</span>
+        </div>
+        <div class="ts-body">
+          <div class="ts-cell"><div class="ts-lbl">원인</div><div class="ts-val">${r(t.cause)}</div></div>
+          <div class="ts-cell"><div class="ts-lbl">해결</div><div class="ts-val">${r(t.solution)}</div></div>
+        </div>
+        <div class="ts-cell-full"><div class="ts-lbl">결과</div><div class="ts-val">${r(t.result)}</div></div>
+      </div>
+    `).join('');
+  }
+
+  /* ── Main project template ── */
+  function renderMP(p) {
+    const links = (p.links||[]).filter(l=>l.url)
+      .map(l=>`<a href="${e(l.url)}" target="_blank">${e(l.label)}</a>`).join(' · ');
+    const metrics = (p.metrics||[]).map(m=>`
+      <div class="mp-metric">
+        <span class="mp-metric-value">${e(m.value)}</span>
+        <span class="mp-metric-label">${e(m.label)}</span>
+      </div>`).join('');
+    const stackBadges = p.stack.map(([,v])=>`<span class="mp-stack-badge">${e(v)}</span>`).join('');
+    const li = (cls, items) => items.map(x=>`<li>${r(x)}</li>`).join('');
+
+    return `
+      <div class="main-project">
+        <div class="mp-header">
+          <h3>${e(p.title)}</h3>
+          <div class="mp-subtitle">${e(p.subtitle)}</div>
+          ${p.period ? `<div class="mp-period">${e(p.period)}</div>` : ''}
+          ${stackBadges ? `<div class="mp-stack">${stackBadges}</div>` : ''}
+          ${links ? `<div class="mp-links">${links}</div>` : ''}
+          ${metrics ? `<div class="mp-metrics">${metrics}</div>` : ''}
+        </div>
+        <div class="mp-body">
+
+          ${lbl('문제 정의')}
+          <ul class="problem-list">${li('',p.problem)}</ul>
+
+          ${hr()}
+          ${lbl('아키텍처')}
+          ${p.archImage
+            ? `<img src="${e(p.archImage)}" class="arch-img" alt="${e(p.title)} 아키텍처" loading="lazy">`
+            : `<div class="arch-placeholder">ARCHITECTURE PLACEHOLDER · 750 × 506</div>`}
+
+          ${hr()}
+          ${lbl('기술 선택 이유')}
+          <ul class="tech-reason-list">${li('',p.techReason)}</ul>
+
+          ${hr()}
+          ${lbl('데이터 모델')}
+          ${p.dataModelImage
+            ? `<img src="${e(p.dataModelImage)}" class="data-model-img" alt="${e(p.title)} 데이터 모델" loading="lazy">`
+            : `<div class="data-model-block">${e(p.dataModel)}</div>`}
+
+          ${hr()}
+          ${lbl('핵심 기능')}
+          <ul class="features-list">${li('',p.features)}</ul>
+
+          ${hr()}
+          ${lbl('구현 포인트')}
+          <ul class="impl-list">${li('',p.implPoints||[])}</ul>
+
+          ${hr()}
+          ${lbl('트러블슈팅')}
+          ${renderTS(p.troubleshooting)}
+
+          ${hr()}
+          ${lbl('성능 개선')}
+          <div class="perf-grid">
+            <div class="perf-card">
+              <div class="perf-lbl before">BEFORE</div>
+              <div class="perf-val">${e(p.performance.before)}</div>
+            </div>
+            <div class="perf-card">
+              <div class="perf-lbl after">AFTER</div>
+              <div class="perf-val">${e(p.performance.after)}</div>
+            </div>
+          </div>
+
+          ${hr()}
+          ${lbl('회고')}
+          <div class="retro-block">${e(p.retrospective)}</div>
+
+          ${hr()}
+          ${lbl('향후 개선')}
+          <ul class="future-list">${li('',p.future)}</ul>
+
+        </div>
+      </div>`;
+  }
+
+  /* ── Small card template ── */
+  function renderSP(p) {
+    const link = p.link ? `<a class="small-card-link" href="${e(p.link)}" target="_blank">GitHub</a>` : '';
+    return `
+      <div class="small-card">
+        <div class="small-card-head">
+          <span class="small-card-title">${e(p.title)}</span>
+          ${link}
+        </div>
+        ${p.period ? `<div class="small-card-period">${e(p.period)}</div>` : ''}
+        <div class="small-card-desc">${e(p.desc)}</div>
+        <div class="badges">${p.stack.map(badge).join('')}</div>
+      </div>`;
+  }
+
+  /* ── Activities ── */
+  function renderAct(list) {
+    return list.map(g => `
+      <div class="activity-group">
+        <div class="activity-year">${e(g.year)}</div>
+        <div class="activity-list">
+          ${g.items.map(i=>`
+            <div class="activity-item">
+              <span class="activity-date">${e(i.date)}</span>
+              <span class="activity-text">${e(i.text)}</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+
+  /* ── Main ── */
+  (function () {
+    const D = JSON.parse(document.getElementById('data').textContent);
+    initMob();
+    renderHero(D.hero);
+    renderAbout(D.about);
+    document.getElementById('mp-root').innerHTML = D.mainProjects.map(renderMP).join('');
+    document.getElementById('sp-root').innerHTML = `<div class="small-grid">${D.smallProjects.map(renderSP).join('')}</div>`;
+    document.getElementById('act-root').innerHTML = renderAct(D.activities);
+  })();
+</script>
 </body>
-
 </html>
-
