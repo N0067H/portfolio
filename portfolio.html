@@ -548,6 +548,7 @@
       .main-project { page-break-inside: avoid; break-inside: avoid; }
       .ts-block, .perf-grid, .small-card { page-break-inside: avoid; break-inside: avoid; }
       .section-gap { margin-top: 36px; }
+      .about-grid { grid-template-columns: 1fr 1fr !important; }
       @page { size: A4; margin: 10mm; }
     }
   </style>
@@ -589,6 +590,7 @@
 
     <!-- ===== SECTION: about ===== -->
     <section id="about" class="section-gap">
+      <h2 class="section-title">About</h2>
       <div id="about-root"></div>
     </section>
 
@@ -1009,8 +1011,8 @@
     `).join('');
     document.getElementById('about-root').innerHTML = `
       <div class="about-grid">
-        <div><h2 class="section-title">About</h2>${bio}</div>
-        <div><h2 class="section-title">Skills</h2>${skills}</div>
+        <div>${bio}</div>
+        <div>${skills}</div>
       </div>
     `;
   }
