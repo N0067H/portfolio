@@ -687,7 +687,7 @@
         {"value": "7종", "label": "커스텀 Prometheus 메트릭"}
       ],
       "problem": [
-        "구직 중 원티드, 잡코리아, 링크드인을 매일 따로 확인해야 했고, 마감이 짧은 공고는 다음 날 이미 닫혀 있었다",
+        "구직 중 원티드, 잡코리아, 링크드인을 따로 확인해야 했고, 마감이 짧은 공고는 다음 날 이미 닫혀 있었다",
         "관심 기술 스택 공고가 올라와도 실시간으로 알 방법이 없어 지원 타이밍을 놓치는 일이 반복됐다",
         "Java나 Rust 같은 기술의 채용 수요가 실제로 얼마나 되는지, 수치 없이 감으로만 판단하고 있었다"
       ],
@@ -708,9 +708,9 @@
         ["Search", "nori"]
       ],
       "techReason": [
-        "Java: 공고 수집, 이메일 등 I/O 바운드 작업을 WebFlux 없이 수백 동시 처리. 명령형 코드를 유지해 복잡도 억제",
+        "Spring Boot: Scheduler, @Async, Events, Mail이 <strong>단일 생태계 안에</strong> 존재해 수집, 태그 추출, 색인, 알림 파이프라인을 외부 프레임워크 없이 조합",
         "Elasticsearch, nori: PG LIKE sequential scan에서 <strong>p99 237ms</strong>를 관측한 뒤 전환. 한국어 형태소 분리로 검색 품질을 개선해 <strong>p99 49ms(-78%)</strong>로 단축",
-        "Redis 다중 용도: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합",
+        "Redis: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합",
         "Testcontainers: ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong> 달성"
       ],
       "dataModel": "users ──(1:N)── user_alerts (조건 JSONB)\n      ──(1:N)── notifications\n      ──(M:N)── job_postings ── bookmarked_jobs\n                             └── application_records\ncompanies ──(1:N)── job_postings ──(M:N)── tech_tags\n                                           └──(1:N)── trend_snapshots",
@@ -722,6 +722,7 @@
         "공고 북마크와 지원 상태 기록"
       ],
       "implPoints": [
+        "공고 수집, 이메일 등 I/O 바운드 작업을 <strong>WebFlux 없이 수백 동시 처리</strong>. 명령형 코드를 유지해 <strong>복잡도 억제</strong>",
         "@Scheduled, @Async, 이벤트 체인(JobCollectedEvent → JobIndexedEvent)으로 수집, 색인, 알림을 <strong>도메인 결합 없이</strong> 연결",
         "ES 장애 시 <strong>search.elasticsearch.enabled=false 플래그 하나로 PostgreSQL FTS로 자동 폴백</strong>해 서비스 연속성 확보",
         "Redis를 검색 캐시(5분 TTL), 트렌드(1시간), Sorted Set 자동완성, Rate Limit 슬라이딩 윈도우 4가지 용도로 <strong>단일 인프라에 통합</strong>",
@@ -800,6 +801,7 @@
         ["Test", "JUnit 5"]
       ],
       "techReason": [
+        "WebFlux: 수백 엔드포인트 헬스체크를 <strong>WebClient 논블로킹 호출</strong>로 처리. 체크 주기가 겹쳐도 스레드를 점유하지 않아 동시 실행",
         "DynamoDB: 온디맨드 과금으로 <strong>유휴 상태 비용을 제로로 유지</strong>. 단순 PK/SK 조회가 주를 이루는 접근 패턴에 최적이었고, RDS 대비 스키마 관리 없이 빠르게 배포",
         "인메모리 스케줄: 앱 시작 시 1회 전체 로드 후 API별 독립 스케줄로 관리해 <strong>체크 주기당 DB 읽기 제거</strong>. API가 1,000개로 늘어도 <strong>체크 1회당 DB 호출은 0건</strong>",
         "Terraform: EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 환경 재현성 확보. <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>하고 변경 이력을 git으로 추적"
