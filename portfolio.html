@@ -624,8 +624,9 @@
     "role": "",
     "tagline": [
       "안녕하세요! 관행이 아닌 <strong>경험에 따른 근거로 기술을 선택</strong>하는 백엔드 개발자입니다.",
-      "<strong>Elasticsearch 도입</strong>으로 p99 응답 시간을 <strong>78% 개선</strong>하고, 캐시 키 정규화로 히트율을 <strong>6배 향상</strong>시키는 등 모든 개선 사항을 측정 가능한 지표로 검증해 왔습니다.",
-      "문제의 요구사항과 제약조건에 따라 <strong>Java와 Rust</strong>를 선택하며, 주요 기술·설계 결정의 근거와 <strong>트레이드오프를 문서화</strong>하는 습관을 갖고 있습니다."
+      "<strong>Elasticsearch 도입</strong>으로 p99 응답 시간을 <strong>78% 개선</strong>하고, 캐시 키 정규화로 히트율을 <strong>6배 향상</strong>시켰습니다.",
+      "",
+      "문제의 요구사항과 제약조건에 따라 <strong>Java와 Rust</strong>를 선택하며,<br>주요 기술·설계 결정의 근거와 <strong>트레이드오프를 문서화</strong>하는 습관을 갖고 있습니다."
     ],
     "contact": {
       "email": "",
@@ -967,7 +968,7 @@
   /* ── Helpers ── */
   const e = (s) => String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const r = (s) => e(s).replace(/&lt;strong&gt;/g,'<strong>').replace(/&lt;\/strong&gt;/g,'</strong>');
+  const r = (s) => e(s).replace(/&lt;strong&gt;/g,'<strong>').replace(/&lt;\/strong&gt;/g,'</strong>').replace(/&lt;br&gt;/g,'<br>');
 
   const badge = (t) => `<span class="badge">${e(t)}</span>`;
   const hr = () => '<div class="mp-divider"></div>';
