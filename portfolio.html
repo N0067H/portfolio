@@ -985,7 +985,7 @@
       <h1 class="hero-name">${e(name)}</h1>
       ${role ? `<div class="hero-role">${e(role)}</div>` : ''}
       ${contacts.length ? `<div class="hero-contact">${contacts.join('')}</div>` : ''}
-      <p class="hero-tagline">${(Array.isArray(tagline) ? tagline : [tagline]).map(r).join('<br>')}</p>
+      <p class="hero-tagline">${(Array.isArray(tagline) ? tagline : [tagline]).map(t => t ? `<span style="display:block">${r(t)}</span>` : '<span style="display:block;margin-top:0.4em"></span>').join('')}</p>
     `;
   }
 
