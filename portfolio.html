@@ -549,7 +549,15 @@
       .ts-block, .perf-grid, .small-card { page-break-inside: avoid; break-inside: avoid; }
       .section-gap { margin-top: 36px; }
       .about-grid { grid-template-columns: 1fr 1fr !important; }
-      @page { size: A4; margin: 10mm; }
+      @page {
+        size: A4;
+        margin: 10mm 10mm 16mm 10mm;
+        @bottom-center {
+          content: counter(page) " / " counter(pages);
+          font-size: 9px;
+          color: #888;
+        }
+      }
     }
   </style>
 </head>
