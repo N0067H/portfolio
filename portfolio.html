@@ -589,7 +589,6 @@
 
     <!-- ===== SECTION: about ===== -->
     <section id="about" class="section-gap">
-      <h2 class="section-title">About</h2>
       <div id="about-root"></div>
     </section>
 
@@ -1010,8 +1009,8 @@
     `).join('');
     document.getElementById('about-root').innerHTML = `
       <div class="about-grid">
-        <div>${bio}</div>
-        <div><div class="bio-label" style="margin-bottom:var(--gap)">Skills</div>${skills}</div>
+        <div><h2 class="section-title">About</h2>${bio}</div>
+        <div><h2 class="section-title">Skills</h2>${skills}</div>
       </div>
     `;
   }
