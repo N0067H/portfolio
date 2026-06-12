@@ -446,6 +446,31 @@
     .perf-table td.col-after { color: var(--accent); font-weight: var(--fw-bold); }
     .perf-table tr:last-child td { border-bottom: none; }
 
+    /* Tradeoffs table */
+    .tradeoffs-table { width: 100%; border-collapse: collapse; }
+    .tradeoffs-table th {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: var(--gap-sm) var(--gap);
+      text-align: left;
+      border-bottom: 2px solid var(--divider);
+    }
+    .tradeoffs-table th.col-cost { color: #888; }
+    .tradeoffs-table th.col-reason { color: var(--accent); }
+    .tradeoffs-table td {
+      padding: var(--gap-sm) var(--gap);
+      border-bottom: 1px solid var(--divider);
+      font-size: var(--fs-sm);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .tradeoffs-table td.col-decision { font-weight: var(--fw-bold); white-space: nowrap; }
+    .tradeoffs-table td.col-cost { color: #888; }
+    .tradeoffs-table td.col-reason { }
+    .tradeoffs-table tr:last-child td { border-bottom: none; }
+
     /* Retrospective */
     .retro-block {
       background: var(--surface);
@@ -548,7 +573,7 @@
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; color: var(--text) !important; font-size: 11px; }
       #site-header { position: static; }
       .main-project { page-break-inside: avoid; break-inside: avoid; }
-      .ts-block, .perf-table, .small-card { page-break-inside: avoid; break-inside: avoid; }
+      .ts-block, .perf-table, .tradeoffs-table, .small-card { page-break-inside: avoid; break-inside: avoid; }
       .section-gap { margin-top: 36px; }
       .about-grid { grid-template-columns: 1fr 1fr !important; }
       @page {
@@ -713,6 +738,12 @@
         "Redis: 검색 캐시(5분 TTL), 트렌드(1시간), 자동완성(Sorted Set ZRANGEBYLEX), Rate Limit(슬라이딩 윈도우)를 단일 인프라로 통합",
         "Testcontainers: ON CONFLICT, JSONB, to_tsvector 등 PG 방언을 실제 컨테이너로 검증해 <strong>배포 후 DB 관련 오류 0건</strong> 달성"
       ],
+      "tradeoffs": [
+        {"decision": "ES 조기 도입", "cost": "375건 이하 median +12ms 손해", "reason": "데이터 증가 시 PG tail latency가 96건 max 329ms에서 275건 543ms로 급증하는 패턴을 실측으로 확인. 한국어 검색 품질 확보 목적으로 단기 손해 감수"},
+        {"decision": "ApplicationEvent (Kafka 대신)", "cost": "앱 재시작 시 이벤트 유실 가능", "reason": "6시간 수집 주기 기준 유실 영향이 허용 범위. Kafka 브로커 운영 복잡도와 비용이 현재 규모에서 이득을 초과"},
+        {"decision": "캐시 전체 삭제 전략", "cost": "수집 직후 1~2분 Cache Stampede", "reason": "어떤 검색 파라미터 조합에 공고가 노출될지 역산 불가. 전체 삭제가 일관성을 단순하게 보장하며, 6시간 주기 대비 재생성 비용 미미"},
+        {"decision": "EC2 단일 인스턴스", "cost": "HA 없음, 단일 장애점", "reason": "포트폴리오 규모에서 ECS/EKS 운영 복잡도와 비용이 과도. Dockerfile 표준화로 Fargate 전환 준비는 완료"}
+      ],
       "dataModel": "users ──(1:N)── user_alerts (조건 JSONB)\n      ──(1:N)── notifications\n      ──(M:N)── job_postings ── bookmarked_jobs\n                             └── application_records\ncompanies ──(1:N)── job_postings ──(M:N)── tech_tags\n                                           └──(1:N)── trend_snapshots",
       "dataModelImage": "sources/joblens/datamodel.svg",
       "features": [
@@ -806,6 +837,10 @@
         "인메모리 스케줄: 앱 시작 시 1회 전체 로드 후 API별 독립 스케줄로 관리해 <strong>체크 주기당 DB 읽기 제거</strong>. API가 1,000개로 늘어도 <strong>체크 1회당 DB 호출은 0건</strong>",
         "Terraform: EC2, DynamoDB, SNS, S3, IAM 역할을 코드로 프로비저닝해 환경 재현성 확보. <strong>terraform apply 한 번으로 전체 스택을 재구성</strong>하고 변경 이력을 git으로 추적"
       ],
+      "tradeoffs": [
+        {"decision": "DynamoDB (RDS 대신)", "cost": "집계·통계 쿼리 복잡도 증가 시 키 재설계 비용 큼", "reason": "단순 PK/SK 접근 패턴이 주를 이루고, 온디맨드 과금으로 유휴 비용 제로. 현재 쿼리 패턴에서 RDS 대비 운영 이점이 큼"},
+        {"decision": "인메모리 스케줄 관리", "cost": "EC2 재시작 시 스케줄 상태 초기화. 멀티 인스턴스 확장 불가", "reason": "체크 주기당 DB Scan을 제거해 API 수와 무관한 O(1) 읽기 구조 확보. 현재 단일 인스턴스로 재시작 영향 허용 범위"}
+      ],
       "dataModel": "MonitoredApi\n  PK: apiId\n  url, interval, timeout, threshold\n  consecutiveFailures, lastAlertAt\n\nCheckHistory\n  PK: apiId\n  SK: ISO 8601 timestamp  (사전순 = 시간순)\n  statusCode, responseTimeMs, success",
       "dataModelImage": "sources/pulse/datamodel.svg",
       "features": [
@@ -888,6 +923,10 @@
         "Rust: <strong>GC 없는 런타임</strong>으로 응답 지연을 예측 가능하게 유지. 컴파일 타임 안전성 보장으로 <strong>런타임 오류 없이 메모리 안전성 확보</strong>",
         "Redis (Elasticache): 반복 쿼리의 LLM 호출을 캐시로 대체해 평균 응답 시간을 <strong>36s에서 16s로 단축</strong>. Elasticache 관리형 서비스로 캐시 인프라 운영 부담 최소화",
         "Tailscale: WireGuard 기반 암호화 터널로 EC2와 온프레미스 LLM 서버를 사설 네트워크로 연결. 복잡한 VPN 구성 없이 <strong>외부 노출 차단과 암호화 통신을 동시에 확보</strong>"
+      ],
+      "tradeoffs": [
+        {"decision": "Rust (Go/Java 대신)", "cost": "좁은 백엔드 생태계, 팀 내 러닝 커브", "reason": "GC 없는 예측 가능한 레이턴시가 LLM 응답 지연 분석에 유리. 컴파일 타임 메모리 안전성으로 런타임 오류 없이 멀티스레드 캐시 구현"},
+        {"decision": "응답 전체 버퍼링 후 캐시 저장", "cost": "첫 응답 수신까지 지연 소폭 증가", "reason": "스트리밍 중간 상태로 저장 시 캐시 히트 응답의 일관성 보장 불가. 완성된 응답만 저장해 캐시 히트 시 LLM 호출을 완전히 생략"}
       ],
       "dataModel": "users\n  PK: user_id\n  apple_sub  (Apple OAuth 식별자)\n  created_at\n\nchat_history\n  PK: id\n  user_id, query_hash  (정규화된 문자열 해시)\n  query_text, response_text\n  created_at",
       "dataModelImage": "sources/qiri/datamodel.svg",
@@ -1058,6 +1097,24 @@
     `).join('');
   }
 
+  function renderTradeoffs(list) {
+    if (!list || !list.length) return '';
+    const rows = list.map(t => `
+      <tr>
+        <td class="col-decision">${e(t.decision)}</td>
+        <td class="col-cost">${e(t.cost)}</td>
+        <td class="col-reason">${e(t.reason)}</td>
+      </tr>`).join('');
+    return `<table class="tradeoffs-table">
+      <thead><tr>
+        <th>결정</th>
+        <th class="col-cost">포기한 것</th>
+        <th class="col-reason">판단 근거</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
   function renderPerf(perf) {
     const rows = perf.rows.map(r => `
       <tr>
@@ -1111,6 +1168,8 @@
           ${hr()}
           ${lbl('기술 선택 이유')}
           <ul class="tech-reason-list">${li('',p.techReason)}</ul>
+
+          ${p.tradeoffs && p.tradeoffs.length ? `${hr()}${lbl('주요 트레이드오프')}${renderTradeoffs(p.tradeoffs)}` : ''}
 
           ${hr()}
           ${lbl('데이터 모델')}
