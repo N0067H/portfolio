@@ -968,6 +968,86 @@
         "형태소 분석기 수준으로 정규화 커버리지를 확장해 히트율 추가 향상",
         "Elasticache 스냅샷 설정을 추가해 서버 재시작 후에도 캐시 히트율 즉시 회복"
       ]
+    },
+    {
+      "title": "Crypto Stream",
+      "subtitle": "Kafka 기반 수집/전달 분리와 SSE 브로드캐스트로 구축한 실시간 암호화폐 가격 스트리밍 API",
+      "period": "개인, 2026.05 ~ 2026.06",
+      "archImage": "sources/crypto-stream/architecture.svg",
+      "dataModelImage": "sources/crypto-stream/datamodel.svg",
+      "links": [{"label": "GitHub", "url": "https://github.com/N0067h/crypto-stream"}],
+      "metrics": [
+        {"value": "-99.8%", "label": "Avg Latency (11,923ms → 28ms)"},
+        {"value": "+310.5%", "label": "Tick TPS (26 → 107 ticks/s)"},
+        {"value": "4초 이내", "label": "collector 장애 자동 복구"}
+      ],
+      "problem": [
+        "Rust로 실제 외부 스트림을 다뤄보고 싶었다. Kafka와 SSE를 조합하면 수집, 분배, 감지 경계를 직접 설계할 수 있어 구조 실험 주제로 적합했다",
+        "단순 WebSocket 중계가 아닌 서비스 간 경계를 Kafka 토픽으로 강제했을 때 장애 격리가 실제로 동작하는지 측정하고 싶었다",
+        "브로드캐스트 채널과 별도 감지 파이프라인을 분리했을 때 레이턴시에 어떤 차이가 나는지 수치로 확인하는 것이 목표였다"
+      ],
+      "stack": [
+        ["Language", "Rust"],
+        ["Framework", "Actix-web"],
+        ["Messaging", "Kafka"],
+        ["Infra", "Docker Compose"]
+      ],
+      "techReason": [
+        "Rust: <strong>GC 없는 예측 가능한 레이턴시</strong>. 컴파일 타임 메모리 안전성으로 멀티스레드 broadcast 채널을 런타임 오류 없이 구현",
+        "Kafka: 수집 경로와 클라이언트 전달 경로를 토픽으로 완전 분리해 <strong>collector 장애가 SSE에 전파되지 않는 구조</strong> 확보. symbol 파티션 키로 체결 순서 보장",
+        "Docker Compose: 서비스 3개(collector, processor, alerting-service) + Kafka + topic 초기화를 <strong>단일 명령으로 재현</strong>. 로컬 검증 비용 최소화"
+      ],
+      "tradeoffs": [
+        {"decision": "Kafka 기반 서비스 분리", "cost": "Kafka 브로커 운영 복잡도 증가", "reason": "collector 장애가 SSE 클라이언트에 전파되지 않는 장애 격리와 symbol 파티션 키 기반 체결 순서 보장을 확보. 현재 규모에서 운영 복잡도 증가를 감수"},
+        {"decision": "Broadcast channel 기반 fanout", "cost": "채널 슬롯 초과 시 느린 구독자 이벤트 손실 가능", "reason": "동일 tick을 클라이언트 수만큼 반복 소비·처리하는 비용 제거. 50 클라이언트 동시 연결에서도 단일 소비 경로 유지"},
+        {"decision": "Docker Compose (K8s 대신)", "cost": "HA 없음, 단일 호스트 제약", "reason": "서비스 3개와 Kafka를 단일 명령으로 재현 가능. 포트폴리오 규모에서 K8s 운영 복잡도와 비용이 과도"}
+      ],
+      "dataModel": "영속 데이터 없음 — 무상태 스트리밍 서비스\nKafka 토픽이 단기 버퍼 역할\n\nprice-tick 토픽\n  publish: collector (Binance WebSocket 수신)\n  consume: processor, alerting-service (독립 consumer group)\n\nprice-alert 토픽\n  publish: alerting-service (급등락 감지 결과)\n  consume: processor (/alerts SSE fanout)",
+      "features": [
+        "Binance WebSocket에서 실시간 tick을 수신해 /ticks SSE로 클라이언트에 스트리밍",
+        "100틱 sliding window 기반 급등락 감지 결과를 /alerts SSE로 팬아웃",
+        "collector 장애 시 Compose restart 정책으로 자동 복구하고 processor와 SSE 클라이언트 연결을 유지"
+      ],
+      "implPoints": [
+        "collector는 Kafka publish만, processor는 consume → <strong>broadcast channel → SSE fanout</strong>만 담당해 수집 경로와 클라이언트 전달 경로를 완전 분리",
+        "symbol을 파티션 키로 사용해 동일 코인 이벤트를 단일 파티션에 수렴 — <strong>분산 환경에서 체결 순서 보장</strong>",
+        "alerting-service를 별도 Kafka consumer로 분리해 <strong>급등락 감지 비용이 /ticks 레이턴시에 영향 없음</strong>"
+      ],
+      "troubleshooting": [
+        {
+          "problem": "Binance WebSocket 수신 장애가 SSE 클라이언트 응답 중단으로 전파됨",
+          "cause": "수집 경로와 클라이언트 전달 경로가 직결되어 Binance 연결 지연·재연결·장애가 그대로 SSE 응답 중단으로 전파됐다",
+          "solution": "Kafka 토픽을 중간에 삽입해 collector와 processor 경로를 완전 분리. collector 장애 시 Compose restart 정책으로 자동 복구하고 processor와 SSE 서버는 독립 유지",
+          "result": "collector가 죽어도 processor와 SSE 서버가 유지된다. 복구 시간 <strong>4,186ms</strong>"
+        },
+        {
+          "problem": "SSE 클라이언트가 늘수록 tick 처리 비용이 선형으로 증가",
+          "cause": "클라이언트마다 개별 consumer 또는 처리 루프를 두어 동일 tick을 클라이언트 수만큼 반복 역직렬화·전송했다",
+          "solution": "processor가 Kafka tick을 1회 consume한 뒤 내부 broadcast channel로 전체 클라이언트에 fanout. 클라이언트 수와 무관하게 단일 소비 경로 유지",
+          "result": "50 클라이언트 동시 연결에서 단일 fanout 경로. SSE TPS <strong>3,161 → 4,812 events/s (+52.2%)</strong>"
+        },
+        {
+          "problem": "급등락 감지 로직이 /ticks 응답 레이턴시를 오염",
+          "cause": "tick 스트리밍 경로 안에서 100틱 sliding window 계산과 급등락 판단을 함께 수행해 탐지 비용이 /ticks 응답 latency에 직접 반영됐다",
+          "solution": "alerting-service를 별도 Kafka consumer로 분리해 price-tick을 독립 consume. 감지 결과만 price-alert 토픽에 publish하고 processor는 /alerts SSE로 fanout",
+          "result": "tick 전달 경로가 단순 스트리밍에 집중. Avg Latency <strong>11,923ms → 28ms (-99.8%)</strong>"
+        }
+      ],
+      "performance": {
+        "rows": [
+          {"label": "Avg Latency", "before": "11,923ms", "after": "28ms (-99.8%)"},
+          {"label": "P95 Latency", "before": "15,320ms", "after": "1,333ms (-91.3%)"},
+          {"label": "Tick TPS", "before": "26.27 ticks/s", "after": "107.82 ticks/s (+310.5%)"},
+          {"label": "SSE TPS (50 clients)", "before": "3,161 events/s", "after": "4,812 events/s (+52.2%)"},
+          {"label": "Recovery Time (collector kill)", "before": "측정 불가", "after": "4,186ms"}
+        ]
+      },
+      "retrospective": "단순히 Binance WebSocket을 SSE로 직결하는 구조에서 시작해, 장애 격리와 순서 보장 요구사항이 구체화되면서 Kafka 기반 분리 설계로 전환했다. Avg Latency 99.8% 개선은 성능 튜닝보다 올바른 서비스 경계 설정에서 나왔다.",
+      "future": [
+        "tick 이력 영속화가 필요하면 Redis Streams 또는 TimescaleDB 연동으로 히스토리 API 추가 가능",
+        "alerting 임계값을 외부 설정 소스로 분리해 런타임 변경 지원",
+        "프로덕션 환경 적용 시 Kafka 브로커 replication factor 설정과 이중화 필요"
+      ]
     }
   ],
   "smallProjects": [
@@ -984,13 +1064,6 @@
       "desc": "프로세스 실행 분석 CLI 도구. 시스템 호출 추적 및 분석.",
       "stack": ["Rust"],
       "link": "https://github.com/N0067H/cavira"
-    },
-    {
-      "title": "crypto-stream",
-      "period": "개인, 2026.05 ~ 2026.06",
-      "desc": "Rust와 Kafka로 구축한 실시간 암호화폐 가격 스트리밍 API. Kafka 기반 수집/전달 분리와 SSE 브로드캐스트 채널 구조로 평균 지연시간 11.9초에서 28ms로 단축.",
-      "stack": ["Rust", "Actix", "Kafka", "Docker"],
-      "link": "https://github.com/N0067h/crypto-stream"
     }
   ],
   "activities": [

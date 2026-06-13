@@ -1,0 +1,17 @@
+architecture-beta
+
+    group compose[Docker Compose]
+
+    service binance(logos:bitcoin)[Binance WebSocket]
+    service collector(logos:rust)[collector service] in compose
+    service kafka(logos:kafka)[Kafka] in compose
+    service alerting(logos:rust)[alerting service] in compose
+    service processor(logos:rust)[processor service] in compose
+    service clients(mdi:account-multiple)[SSE Clients]
+
+    binance:R --> L:collector
+    collector:R --> L:kafka
+    kafka:R --> L:processor
+    kafka:B --> T:alerting
+    alerting:R --> B:processor
+    processor:R --> L:clients

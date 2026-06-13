@@ -1,0 +1,18 @@
+classDiagram
+    direction LR
+
+    class `price-tick topic` {
+        + symbol : String
+        + price : f64
+        + quantity : f64
+        + timestamp : u64
+    }
+
+    class `price-alert topic` {
+        + symbol : String
+        + direction : String
+        + change_pct : f64
+        + timestamp : u64
+    }
+
+    `price-tick topic` --> `price-alert topic`
